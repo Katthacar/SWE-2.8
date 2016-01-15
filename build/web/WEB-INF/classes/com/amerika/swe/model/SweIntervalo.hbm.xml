@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SweIntervalo" schema="SWEAMERIKA" table="SWE_INTERVALO">
+        <id name="idIntervalo" type="int">
+            <column name="ID_INTERVALO" precision="6" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">seq_swe_idintervalo</param>               
+            </generator>            
+        </id>
+        <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdLenguaje">
+            <column name="ID_LENGUAJE" not-null="true" precision="6" scale="0">
+                <comment>Llave foránea que apunta a la tabla SWE_CATA.ID_CATALOGO</comment>
+            </column>
+        </many-to-one>
+        <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdPerfil">
+            <column name="ID_PERFIL" not-null="true" precision="6" scale="0">
+                <comment>Llave foránea que apunta a la tabla SWE_CATA.ID_CATALOGO</comment>
+            </column>
+        </many-to-one>
+        <property name="valorInicial" type="big_decimal">
+            <column name="VALOR_INICIAL" not-null="true" precision="6" scale="2">
+                <comment>Representa el valor o la cantidad mínima de puntos de función</comment>
+            </column>
+        </property>
+        <property name="valorFinal" type="big_decimal">
+            <column name="VALOR_FINAL" not-null="true" precision="6" scale="2">
+                <comment>Representa el valor o la cantidad máxima de puntos de función</comment>
+            </column>
+        </property>
+        <property name="fechaModif" type="timestamp">
+            <column length="7" name="FECHA_MODIF">
+                <comment>Fecha en la que fue creado o modificado por última vez el registro</comment>
+            </column>
+        </property>
+        <property name="usuario" type="string">
+            <column length="15" name="USUARIO">
+                <comment>Usuario que crea o modifica el registro por última vez</comment>
+            </column>
+        </property>
+        <set inverse="true" name="sweIntervaloHrs">
+            <key>
+                <column name="ID_INTERVALO" not-null="true" precision="9" scale="0"/>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweIntervaloHr"/>
+        </set>
+    </class>
+</hibernate-mapping>

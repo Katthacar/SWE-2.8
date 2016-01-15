@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="content"> 
+                <p:growl id="msgs" showDetail="true" /> 
+
+                <h:form id="listarFambiental" style="width: 550px; margin-left: 200px;">                 
+                    <p:fieldset legend="Factor Ambiental" style="width: 150%;" toggleable="true" collapsed="true"> 
+                        <p:dataTable id="ListadoFambiental" var="List_Fambiental" value="" widgetVar="Tabla_Fambiental"  >  
+                            <p:column headerText="Nombre" style="width:24%" >  
+                                <h:outputText value="" />  
+                            </p:column> 
+                            <p:column headerText="Descripción" style="width:220%">  
+                                <h:outputText value="" />  
+                            </p:column>  
+                            <p:column style="width:10%">                                                    
+                                <p:commandButton id="BtnAgregarValorFambinetal"  icon="ui-icon-search" title="Agregar Peso" oncomplete="Factor_Ambiental.show()">  
+                                    <f:setPropertyActionListener value="" target="" />  
+                                </p:commandButton>  
+                            </p:column>  
+                        </p:dataTable>               
+                    </p:fieldset>                
+                </h:form>  
+
+                <h:form id="Crear_Fambiental">
+                    <p:dialog header="Crear Factor Ambiental" widgetVar="Factor_Ambiental" resizable="false" id="dlgCrearFambiental"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+
+
+                            <h:outputLabel for="nombreFactor" value="Nombre:" style="font-weight:bold"/>  
+                            <p:inputText id="nombreFactor" value="#{parametroBean.selectedparametro.nombre}" required="true" label="Nombre Del Factor Ambinetal" style="width: 70%"  /> 
+
+
+                            <h:outputLabel for="valorFactor" value="Valor:" style="font-weight:bold"/>  
+                            <p:inputText id="valorFactor" value="#{parametroBean.selectedparametro.valor}" required="true" label="Valor del parametro" style="width: 70%"  /> 
+
+                            <h:outputLabel for="desc" value="Descripción:" style="font-weight: bold"/>  
+                            <p:inputTextarea id="desc" rows="6" cols="33" value="#{parametroBean.selectedparametro.descripcion}"  required="true" label="Descripción del tipo de catalogo" validatorMessage="true"/>
+
+                            <f:facet name="footer">
+                                <p:commandButton id="BtnGuardarFambiental" update=":listarFambiental, :msgs"  oncomplete="Factor_Ambinetal.hide()"    actionListener="#{parametroBean.BtnCrearParametro(actionEvent)}" icon="ui-icon-search" title="Guardar" value="Guardar"  />  
+                                <p:commandButton id="BtnCancelarFambiental"  oncomplete="Factor_Ambiental.hide()" icon="ui-icon-search" title="cancelar" value="Cancelar"/>      
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+            </ui:define>           
+        </ui:composition>
+    </body>
+</html>

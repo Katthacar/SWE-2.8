@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-schema="SWEAMERIKA"/>
+  <table-filter match-name="SWE_FTECN_XSOL"/>
+  <table-filter match-name="SWE_TIPO_DETRET"/>
+  <table-filter match-name="SWE_MENU_PERFIL"/>
+  <table-filter match-name="SWE_PARAM"/>
+  <table-filter match-name="SWE_TIPO_APLI_X_FTEC"/>
+  <table-filter match-name="SWE_TIPO_CATA"/>
+  <table-filter match-name="SWE_COMP_XSOLI"/>
+  <table-filter match-name="SWE_COMP_X_PFUNCION"/>
+  <table-filter match-name="SWE_FACT_AMBI_XSOL"/>
+  <table-filter match-name="SWE_USUARIOS"/>
+  <table-filter match-name="SWE_FACT_CAL_X_TSOL"/>
+  <table-filter match-name="SWE_HOMO_XETAPA"/>
+  <table-filter match-name="SWE_MENU"/>
+  <table-filter match-name="SWE_FUNCION"/>
+  <table-filter match-name="SWE_SOLI"/>
+  <table-filter match-name="SWE_USUARIO_PERFIL"/>
+  <table-filter match-name="SWE_CATA_DETRET"/>
+  <table-filter match-name="SWE_PORC_DIST_XETAPA"/>
+  <table-filter match-name="SWE_DEFPERF_ASOCIAHR_XLENG"/>
+  <table-filter match-name="SWE_PERFIL"/>
+  <table-filter match-name="SWE_ETAPA_XSOL"/>
+  <table-filter match-name="SWE_TCOMP_X_COMP"/>
+  <table-filter match-name="SWE_FUNCION_PERFIL"/>
+  <table-filter match-name="SWE_CATA"/>
+  <table-filter match-name="SWE_PRONOSTICO"/>
+  <table-filter match-name="SWE_INTERVALO"/>
+  <table-filter match-name="SWE_INTERVALO_HR"/>
+</hibernate-reverse-engineering>

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2013 01:46:17 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SweUsuarios" table="SWE_USUARIOS" schema="SWEAMERIKA">
+        <id name="codigo" type="string">
+            <column name="CODIGO" length="15" />
+            <generator class="assigned" />
+        </id>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="15" not-null="true">
+                <comment>Usuario administrador que registra el usuario</comment>
+            </column>
+        </property>
+        <property name="programa" type="string">
+            <column name="PROGRAMA" length="50" not-null="true">
+                <comment>P&#225;gina o programa desde donde se hizo la modificaci&#243;n</comment>
+            </column>
+        </property>
+        <property name="fechaModif" type="date">
+            <column name="FECHA_MODIF" length="7" not-null="true">
+                <comment>Fecha de creaci&#243;n o modificaci&#243;n del registro</comment>
+            </column>
+        </property>
+        <property name="pass" type="string">
+            <column name="PASS" length="50" not-null="true">
+                <comment>Password del usuario</comment>
+            </column>
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="50" not-null="true">
+                <comment>Nombre completo del usuario</comment>
+            </column>
+        </property>
+        <property name="telefono" type="string">
+            <column name="TELEFONO" length="10">
+                <comment>Tel&#233;fono del usuario</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="5" not-null="true">
+                <comment>Estado en que se encuentra el registro del usuario Activo=&gt;'A' Inactivo=&gt;'I'</comment>
+            </column>
+        </property>
+        <property name="fechaAlta" type="date">
+            <column name="FECHA_ALTA" length="7" not-null="true">
+                <comment>Fecha en la que registro el usuario</comment>
+            </column>
+        </property>
+        <property name="fechaBaja" type="date">
+            <column name="FECHA_BAJA" length="7">
+                <comment>Fecha en la que se dio de baja el usuario</comment>
+            </column>
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" length="100" unique="true">
+                <comment>correo electr&#243;nico del usuario</comment>
+            </column>
+        </property>
+        <set name="sweUsuarioPerfils" inverse="true">
+            <key>
+                <column name="CODIGO_USUARIO" length="15" not-null="true">
+                    <comment>C&#243;digo del usuario de la tabla Usuarios.codigo</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweUsuarioPerfil" />
+        </set>
+    </class>
+</hibernate-mapping>

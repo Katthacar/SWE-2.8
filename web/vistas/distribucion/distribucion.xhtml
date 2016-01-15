@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"          
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Distribución x etapas</ui:define>
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />
+                <p:fieldset legend="Porcentajes de distribución por etapa" style="width: 80%;margin-left: auto;margin-right: auto;"> 
+                    <h:form id="form" style="width: 90%;margin-left: auto;margin-right: auto;margin-top: 20px;margin-bottom: 15px;">
+                        <p:dataTable id="porcxEtapa" var="porcDistxEtapa" value="#{beanPorDistxEtapa.list_porcDistxEtapa}" rowKey="#{porcDistxEtapa.idDistetapa}" styleClass="tablaDatos"  
+                                     emptyMessage="No hoy registros"   selection="#{beanPorDistxEtapa.seleccionado}" selectionMode="single"  paginator="true" rows="8"  paginatorPosition="top">  
+
+                            <p:column headerText="Nombre" style="width: 30%" styleClass="columna_texto"> 
+                                <h:outputText value="#{porcDistxEtapa.sweCata.nombre}"/>
+                            </p:column> 
+
+                            <p:column headerText="Descripción" style="width: 40%" styleClass="columna_texto" >  
+                                <h:outputText value="#{porcDistxEtapa.sweCata.descripcion}"/>                                  
+                            </p:column>  
+
+                            <p:column headerText="Vigencia Inicial" style="width: 15%" styleClass="columna_fecha">  
+                                <h:outputText value="#{porcDistxEtapa.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>          
+                            </p:column> 
+
+                            <p:column headerText="Porcentaje" style="width: 15%" styleClass="columna_numero">  
+                                <h:outputText value="#{porcDistxEtapa.porcentaje}%"/>
+                            </p:column> 
+
+                            <p:columnGroup type="footer">  
+                                <p:row>  
+                                    <p:column colspan="3" footerText="Total:" style="text-align:right"  /> 
+                                    <p:column footerText="#{beanPorDistxEtapa.sum_porcentajes}%" style=" text-align: right; "/>
+                                </p:row>  
+                            </p:columnGroup> 
+                            <f:facet name="footer">
+                                <p:commandButton id ="btnAgregar" value="Modificar porcentajes" icon="ui-icon-pencil" actionListener="#{beanPorDistxEtapa.inicializar}"
+                                                 title="Modificar porcentajes" update=":crear_porcDisxEtapa:display" oncomplete="carDialog.show()"/>
+                                <p:commandButton id="BtnGuardarCambios" update=":form, :msgs"  oncomplete="carDialog.hide()" actionListener="#{beanPorDistxEtapa.guardarCambios}"
+                                                 disabled="#{beanPorDistxEtapa.sum_porcentajes.floatValue() != 100.00}"
+                                                 icon="ui-icon-disk" title="Guardar cambios" value="Guardar cambios"  />  
+                                <p:commandButton id="btnHistorico" value="Ver histórico" actionListener="#{beanPorDistxEtapa.historial}"
+                                                 title="Ver histórico" update=":form_historico:tabla_historico, :msgs" disabled="#{beanPorDistxEtapa.editar}" icon="ui-icon-search" />
+                            </f:facet>
+                        </p:dataTable>                        
+                    </h:form>
+                </p:fieldset> 
+                
+                <h:form id="crear_porcDisxEtapa">
+                    <p:dialog id="dialog" header="Porcentajes de distribución" widgetVar="carDialog" resizable="false"  
+                              width="375" showEffect="clip" hideEffect="fold" modal="true" >  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="width: 100%;">  
+                            <h:outputLabel for="lista_etapas" value="Etapa: " style="font-weight:bold" /> 
+                            <p:selectOneMenu id="lista_etapas" value="#{beanPorDistxEtapa.nuevo_porcDistxEtapa.sweCata.idCatalogo}" style="width: 87%;"
+                                             required="true" requiredMessage="Seleccione una etapa">
+                                <f:selectItem itemLabel="Seleccione etapa" itemValue="" />  
+                                <f:selectItems value="#{beanPorDistxEtapa.list_etapas}" var="etapa" itemDescription="#{etapa.descripcion}" itemLabel="#{etapa.nombre}" itemValue="#{etapa.idCatalogo}"/>                                  
+                                <p:ajax event="change" update="cod" listener="#{beanPorDistxEtapa.ajaxEtapaSeleccionada}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="cod" value="Porcentaje (%):" style="font-weight:bold;"/>  
+                            <p:inputText id="cod" value="#{beanPorDistxEtapa.nuevo_porcDistxEtapa.porcentaje}" required="true" maxlength="5"
+                                         requiredMessage="Digite el porcentaje" converterMessage="El campo porcentajes solo permite valores numéricos"/>  
+
+                            <h:outputLabel for="vInicial" value="Vigencia Inicial:" style="font-weight:bold;"/>
+                            <p:inputText id="vInicial" value="#{beanPorDistxEtapa.nuevo_porcDistxEtapa.vigenciaInicial}" disabled="true" style="font-weight:bold">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText> 
+                            <f:facet name="footer">
+                                <p:separator style="width: 93%;margin-right: 19px;"/>
+                                <div style="margin-left: 35%;">
+                                    <p:commandButton id="BtnAgregarPorcentajes" update=":form:porcxEtapa, :msgs" actionListener="#{beanPorDistxEtapa.agregar}"
+                                                     icon="ui-icon-disk" title="Aceptar" value="Aceptar"  /> 
+                                    <p:commandButton id="BtnCancelarCrearPorcentajes"  oncomplete="carDialog.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+
+                        </h:panelGrid>  
+                    </p:dialog>  
+                </h:form> 
+                <h:form id="form_historico">
+                    <p:dialog id="dialog_historico" header="Porcentajes de distribución" widgetVar="DialogHistorico" resizable="false"  
+                              width="400" showEffect="clip" hideEffect="fold" modal="true">
+                        <p:dataTable id="tabla_historico" var="porcXetap" paginator="true" paginatorPosition="bottom" rows="5"
+                                     emptyMessage="No hay registros" value="#{beanPorDistxEtapa.list_historico}" widgetVar="tablaHistorico">
+
+                            <f:facet name="header">
+                                <h:outputText value="Histórico etapa de #{beanPorDistxEtapa.seleccionado.sweCata.nombre}"/>   
+                            </f:facet>
+                            <p:column headerText="Pocentaje" styleClass="columna_numero">
+                                #{porcXetap.porcentaje}%
+                            </p:column>
+                            <p:column headerText="Vigencia Inicial" styleClass="columna_fecha">
+                                <h:outputText value="#{porcXetap.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                            <p:column headerText="Vigencia Final" styleClass="columna_fecha">
+                                <h:outputText value="#{porcXetap.vigenciaFinal}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog> 
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

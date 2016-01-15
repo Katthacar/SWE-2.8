@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta http-equiv="Expires" content="0" />
+            <meta http-equiv="Pragma" content="no-cache" />
+            <link href="#{appBean.baseUrl}resources/css/default.css" rel="stylesheet" type="text/css" />
+            <link href="#{appBean.baseUrl}resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+            <link href="#{appBean.baseUrl}resources/css/estilos.css" rel="stylesheet" type="text/css" />                    
+            <script type="text/javascript">
+                if (history.forward(1)) {
+                    location.replace(history.forward(1));
+                }
+            </script>       
+            <title><ui:insert name="title" /></title>        
+        </f:facet>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("input:visible:first").focus();
+                PrimeFaces.locales['es'] = {
+                    closeText: 'Cerrar',
+                    prevText: 'Anterior',
+                    nextText: 'Siguiente',
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    dayNamesMin: ['do', 'lu', 'ma', 'mi', 'ju', 'vi', 'sá'],
+                    weekHeader: 'Semana',
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: '',
+                    timeOnlyTitle: 'Sólo hora',
+                    timeText: 'Tiempo',
+                    hourText: 'Hora',
+                    minuteText: 'Minuto',
+                    secondText: 'Segundo',
+                    currentText: 'Fecha actual',
+                    ampm: false,
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día',
+                    allDayText: 'Todo el día'
+                };
+                $('ul > li > a > span').addClass('ui-icon-grip-dotted-vertical');
+                $('ul > li > a > span ').removeClass('ui-icon-triangle-1-e');                
+            });            
+
+        </script>
+    </h:head>
+    <h:body>
+        <div id="conteiner">              
+            <div id="top">
+                <ui:insert name="top">  
+                    <div style="color: black;">                        
+                        <p style="text-align: right;">#{loginBean.usuarioAutentico.nombre}</p>
+                        <p style="text-align: right;"><a href="#{appBean.baseUrl}vistas/conf/usuario.xhtml">#{loginBean.usuarioAutentico.email}</a></p>                      
+                    </div>
+                </ui:insert>                      
+            </div>
+            <br></br>
+            <div id="menu" >
+                <h:form>                
+                    <p:menubar  model="#{menu.menuBar}" style="width: 99%;"/>
+                </h:form>  
+            </div>
+            <br></br><br></br>
+            <div id="content"  class="center_content">
+                <ui:insert name="content"></ui:insert>              
+            </div>
+            <br></br>
+            <div id="bottom">
+                <ui:insert name="bottom">Todos los derechos reservados, Grupo INASSA S.A. Barranquilla CO</ui:insert>
+                <ul id="nav" >
+                    <li><a href="http://www.aaa.com.co/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-01.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.metroagua.com.co/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-02.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.aaa.com.do/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-03.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.amagua.com/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-04.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.recaudosytributos.com/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-05.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.gis.com.co/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-06.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.amerika-e.com/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-07.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.inassa.com.pa/" target="_blank"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-08.png" alt="." border="0" /></a></li>
+                    <li><a href="http://www.grupoinassa.com/?page_id=426"><img src="http://www.grupoinassa.com/wp-content/themes/inassa/images/logos-09.png" alt="." border="0" /></a></li>
+                </ul>   
+            </div>
+        </div>       
+    </h:body>
+</html>

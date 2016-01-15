@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Catalogo y tipos</ui:define>
+            <ui:define name="content" >    
+                <style type="text/css">
+                    .botones_dialog{text-align: right; padding-right: 30px;}
+                </style>
+                <!-- DataTable y Jdialog para crear tipos de catalogos -->
+                <p:fieldset legend="Tipos de catalogos" style="width: 80%;margin-left: auto;margin-right: auto;">  
+                    <p:growl id="msgs" showDetail="true" />    
+                    <div style="margin-left: auto; margin-right: auto; padding-left: 23px; padding-top: 15px;">
+                        <h:form>                        
+                            <p:commandButton id="btnCrearTipoCatalogo" update=":Crear_Tipo_Cata" 
+                                             oncomplete="DialogCrearTipoCata.show()" icon="ui-icon-plus" value="Agregar Tipo De Catalogo" actionListener="#{beanCatalogo.inicializar}"/>                                    
+                        </h:form> 
+                    </div>
+                    <div style="margin-left: auto; margin-right: auto; padding-top: 10px; padding-bottom: 20px; width: 95%;">
+                        <h:form id="form_Tipo_Cata">  
+                            <p:dataTable id="tabla_tipo_cata" var="tipo_catalogo" value="#{beanCatalogo.tipos_catalogo}"  
+                                         paginator="true" rows="4"  paginatorPosition="bottom" styleClass="tablaDatos"
+                                         selectionMode="single" rowKey="#{tipo_catalogo.codigoTipo}"  
+                                         selection="#{beanCatalogo.selected_TipoCatalogo}" style="width: 100%;"> 
+
+                                <p:ajax event="rowSelect" listener="#{beanCatalogo.onRowSelect}"   
+                                        update=":formCatalogos:catalogos,  :formCatalogos:btnCrearCatalogo :Crear_Catalogo:dlgCatas"/>  
+
+                                <p:column headerText="Código" style="width: 5%" styleClass="columna_codigo">  
+                                    <h:outputText value="#{tipo_catalogo.codigoTipo}" />  
+                                </p:column>  
+
+                                <p:column headerText="Nombre" style="width: 30%" styleClass="columna_texto" filterBy="#{tipo_catalogo.nombre}">  
+                                    <h:outputText value="#{tipo_catalogo.nombre}" />  
+                                </p:column>  
+
+                                <p:column headerText="Descripción" style="width:45%" styleClass="columna_texto" >  
+                                    <h:outputText value="#{tipo_catalogo.descripcion}"/>  
+                                </p:column>  
+
+                                <p:column headerText="Mostrar Estado" style="width:5%" styleClass="columna_boolean" >  
+                                    <h:outputText value="#{tipo_catalogo.mostrarEstado}" />  
+                                </p:column>
+
+                                <p:column headerText="Mostrar Valor" style="width:5%" styleClass="columna_boolean">  
+                                    <h:outputText value="#{tipo_catalogo.mostrarValor}" />  
+                                </p:column>  
+
+                                <p:column style="width:10%">  
+                                    <p:commandButton id="BtnModificar_tipocata" update=":ModificarTipoCata:dlgModificarCata" 
+                                                     actionListener="#{beanCatalogo.num_catalogos(tipo_catalogo)}" oncomplete="DialogModificarTipoCata.show()"
+                                                     icon="ui-icon-pencil" title="Modificar">  
+                                        <f:setPropertyActionListener value="#{tipo_catalogo}" target="#{beanCatalogo.selected_TipoCatalogo}" />  
+                                    </p:commandButton>  
+                                    <p:commandButton id="BtnEliminar_tipocata" update=":DeleteTipoCata" oncomplete="DialogEliminarTipoCata.show()"
+                                                     icon="ui-icon-trash" title="Eliminar">  
+                                        <f:setPropertyActionListener value="#{tipo_catalogo}" target="#{beanCatalogo.selected_TipoCatalogo}" />  
+                                    </p:commandButton>  
+                                </p:column> 
+
+                            </p:dataTable>  
+                        </h:form> 
+                    </div>               
+                </p:fieldset>  
+
+                <h:form id="Crear_Tipo_Cata">
+                    <!-- DIALOG PARA CREAR TIPO DE CATALOGO -->
+                    <p:dialog header="Crear tipo catalogo" widgetVar="DialogCrearTipoCata" resizable="false" id="dlgCrearCatalogo"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+                            <h:outputLabel for="Codigotipocat" value="Código:" style="font-weight:bold"/>  
+                            <p:inputText id="Codigotipocat" value="#{beanCatalogo.nuevoTipoCatalogo.codigoTipo}" required="true" label="tipocat" size="10" style="width:25%" disabled="true"/> 
+
+                            <h:outputLabel for="nombrecat" value="Nombre:" style="font-weight:bold"/>  
+                            <p:inputText id="nombrecat" value="#{beanCatalogo.nuevoTipoCatalogo.nombre}" maxlength="45" requiredMessage="Digite el nombre"
+                                         required="true" label="Nombre de tipo de catalogo" style="width: 84%"  /> 
+
+
+                            <h:outputLabel for="estados" value="Estado:" style="font-weight:bold"/>  
+                            <p:selectOneMenu id ="estados" value="#{beanCatalogo.nuevoTipoCatalogo.mostrarEstado}" required="true"
+                                             requiredMessage="Seleccione una opción en mostrar estados" style="width: 88%" >  
+                                <f:selectItem itemLabel="Mostrar Estado" itemValue="" />  
+                                <f:selectItem itemLabel="S" itemValue="S" />  
+                                <f:selectItem itemLabel="N" itemValue="N" />  
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="value" value="Valor:" style="font-weight:bold"/>  
+                            <p:selectOneMenu id ="value" value="#{beanCatalogo.nuevoTipoCatalogo.mostrarValor}"
+                                             requiredMessage="Seleccione una opción en mostrar valor" required="true" style="width: 88%">  
+                                <f:selectItem itemLabel="Mostrar Valor" itemValue="" />  
+                                <f:selectItem itemLabel="S" itemValue="S" />  
+                                <f:selectItem itemLabel="N" itemValue="N" />  
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="descriptiones" value="Descripción:" style="font-weight: bold"/>  
+                            <p:inputTextarea id="descriptiones" rows="6" cols="33" value="#{beanCatalogo.nuevoTipoCatalogo.descripcion}" maxlength="100"
+                                             required="true" requiredMessage="Digite una descripción" label="Descripción del tipo de catalogo" validatorMessage="true" style="width: 85%"/>
+
+                            <f:facet name="footer" >
+                                <p:separator style="width: 90%; margin-right: 29px;" />
+                                <div class="botones_dialog">
+                                    <p:commandButton id="BtnGuardarCrearTipo" update=":form_Tipo_Cata:tabla_tipo_cata, :msgs" actionListener="#{beanCatalogo.btnCrearTipoCatlogo}" icon="ui-icon-disk" title="Guardar" value="Guardar"  />  
+                                    <p:commandButton id="BtnCancelarCrearTipo"  oncomplete="DialogCrearTipoCata.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/> 
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form>    
+
+                <h:form id="ModificarTipoCata">
+                    <!-- DIALOG PARA MODIFICAR LOS TIPOS DE CATALOGO -->
+                    <p:dialog header="Modificar tipo de catalogo" widgetVar="DialogModificarTipoCata" resizable="false" id="dlgModificarCata"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+                            <h:outputLabel for="CodigoActual" value="Código:" style="font-weight:bold"/>  
+                            <p:inputText id="CodigoActual" value="#{beanCatalogo.nuevoTipoCatalogo.codigoTipo}"  label="tipocat" size="10" style="font-weight:bold" disabled="true"/> 
+
+                            <h:outputText value="Nombre:" style="font-weight:bold"/>  
+                            <p:inputText maxlength="45" value="#{beanCatalogo.nuevoTipoCatalogo.nombre}" disabled="true"
+                                         style="font-weight:bold;width: 84%" label="Nombre de tipo de catalogo" validatorMessage="true"/>  
+
+
+                            <h:outputLabel for="estatipo" value="Estado:" style="font-weight:bold" />  
+                            <p:selectOneMenu id ="estatipo" value="#{beanCatalogo.nuevoTipoCatalogo.mostrarEstado}" style="width: 88%; font-weight:bold" 
+                                             disabled="#{beanCatalogo.num_catalogos_tipo}">  
+                                <f:selectItem itemLabel="Mostrar Estado" itemValue="" />  
+                                <f:selectItem itemLabel="S" itemValue="S" />  
+                                <f:selectItem itemLabel="N" itemValue="N" />  
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="valtipo" value="Valor:" style="font-weight:bold"/>  
+                            <p:selectOneMenu id ="valtipo" value="#{beanCatalogo.nuevoTipoCatalogo.mostrarValor}" style="width: 88%; font-weight:bold"  
+                                             disabled="#{beanCatalogo.num_catalogos_tipo}">  
+                                <f:selectItem itemLabel="Mostrar Valor" itemValue=""  />  
+                                <f:selectItem itemLabel="S" itemValue="S" />  
+                                <f:selectItem itemLabel="N" itemValue="N" />  
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="desc" value="Descripción:" style="font-weight: bold"/>  
+                            <p:inputTextarea id="desc" maxlength="100" rows="6" cols="33" value="#{beanCatalogo.nuevoTipoCatalogo.descripcion}" style="font-weight:bold; width: 85%;" label="Descripción del tipo de catalogo" validatorMessage="true"/>
+
+                            <f:facet name="footer">
+                                <p:separator style="width: 90%; margin-right: 29px;" />
+                                <div class="botones_dialog">
+                                    <p:commandButton id="BtnActualizarCrearTipo" update=":form_Tipo_Cata:tabla_tipo_cata, :msgs" actionListener="#{beanCatalogo.btnModificarTipoCatlogo}" icon="ui-icon-pencil" title="Actualizar" value="Actualizar"/>  
+                                    <p:commandButton id="BtnCancelarActualTipo"  oncomplete="DialogModificarTipoCata.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+                <h:form id="DeleteTipoCata">
+                    <p:confirmDialog id ="confirmdialog" header="Eliminar Tipo De Catalogo #{beanCatalogo.selected_TipoCatalogo.codigoTipo}" 
+                                     severity="alert" showEffect="fade" hideEffect="explode" message="¿Desea eliminar el tipo de catalogo?" widgetVar="DialogEliminarTipoCata">                                  
+                        <div class="botones_dialog" style="width: 80%; margin-left: 18%;">
+                            <p:commandButton id="confirm" update=":form_Tipo_Cata:tabla_tipo_cata,:msgs"  styleClass="ui-confirmdialog-yes"
+                                             icon="ui-icon-check" oncomplete="DialogEliminarTipoCata.hide()" actionListener="#{beanCatalogo.btnEliminarTipoCatlogo}" value="Aceptar"/>  
+                            <p:commandButton  id="decline" value="Cancelar" type="button" styleClass="ui-confirmdialog-no"
+                                              icon="ui-icon-close" onclick="DialogEliminarTipoCata.hide();"/>       
+                        </div>
+                    </p:confirmDialog> 
+                </h:form> 
+
+                <!-- DataTable y Jdialog para crear catalogos -->
+                <p:growl id="msj" showDetail="true" />                       
+                <h:form id="formCatalogos" style="padding-top: 15px; "> 
+                    <p:fieldset legend="Detalle de catalogo" style="width: 80%; margin-left: auto; margin-right: auto;"> 
+                        <div style="margin-left: auto; margin-right: auto; padding-left: 23px; padding-top: 15px;">
+                            <p:commandButton id="btnCrearCatalogo" update=":Crear_Catalogo, :Crear_Tipo_Cata"  icon="ui-icon-plus" 
+                                             value="Agregar Catalogo" actionListener="#{beanCatalogo.inicializarCatalogo}" disabled="#{beanCatalogo.selected_TipoCatalogo == null}"/>                                    
+                        </div>
+                        <div style="margin-left: auto; margin-right: auto; padding-top: 10px; padding-bottom: 20px; width: 95%;">
+                            <p:dataTable id="catalogos" var="catalogo" value="#{beanCatalogo.catalogos}" emptyMessage="No hay catálogos cargados"
+                                         paginator="true" rows="4"  paginatorPosition="bottom" styleClass="tablaDatos" style="width: 100%">                                              
+
+                                <p:column headerText="Código Tipo" style="width: 5%" styleClass="columna_codigo" >  
+                                    <h:outputText value="#{catalogo.sweTipoCata.codigoTipo}"/>  
+                                </p:column>
+
+                                <p:column headerText="Código" style="width: 5%" styleClass="columna_codigo" filterBy="#{catalogo.idCatalogo}">  
+                                    <h:outputText value="#{catalogo.idCatalogo}"/>  
+                                </p:column>   
+
+                                <p:column headerText="Nombre" style="width: 20%"  styleClass="columna_texto">  
+                                    <h:outputText value="#{catalogo.nombre}" />  
+                                </p:column>  
+
+                                <p:column headerText="Descripción" style="width: 50%" styleClass="columna_texto">  
+                                    <h:outputText value="#{catalogo.descripcion}" />  
+                                </p:column>  
+
+                                <p:column headerText="Estado" style="width: 5%" styleClass="columna_boolean" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarEstado == 'S'}">  
+                                    <h:outputText value="#{catalogo.estado}" />  
+                                </p:column>  
+
+                                <p:column headerText="Valor" style="width: 5%" styleClass="columna_numero" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarValor == 'S'}">  
+                                    <h:outputText value="#{catalogo.valor}" />  
+                                </p:column>  
+
+                                <p:column style="width: 10%">  
+                                    <p:commandButton id="BtnModificarCata" update=":ModificarCatalogo" oncomplete="DialogModificarCatalogo.show()"  actionListener="#{beanCatalogo.btnActualizar_catalogo(catalogo)}"
+                                                     icon="ui-icon-pencil" title="Modificar">   
+                                        <f:setPropertyActionListener value="#{catalogo}" target="#{beanCatalogo.selected_Catalogo}" />  
+                                    </p:commandButton>  
+                                    <p:commandButton id="BtnEliminar" update=":DeleteCata" oncomplete="DialogEliminarCata.show()" icon="ui-icon-trash" title="Eliminar">  
+                                        <f:setPropertyActionListener value="#{catalogo}" target="#{beanCatalogo.selected_Catalogo}" />  
+                                    </p:commandButton>  
+                                </p:column>  
+                            </p:dataTable> 
+                        </div>
+                    </p:fieldset>  
+                </h:form> 
+
+                <h:form id="Crear_Catalogo">
+                    <!-- DIALOG PARA CREAR CATALOGO -->
+                    <p:dialog header="Crear Catalogo" widgetVar="DialogCata" resizable="false" id="dlgCatas"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="Display" columns="2" cellpadding="4" style="margin:0 auto;">  
+
+                            <h:outputText value="Código Catalogo:" style="font-weight:bold"/> 
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.idCatalogo}" label="Codigo del catalogo" style="width: 30%" disabled="true"/>  
+
+                            <h:outputText value="Código Tipo:" style="font-weight:bold;"/> 
+                            <p:inputText value="#{beanCatalogo.selected_TipoCatalogo.codigoTipo}" disabled="true" style="font-weight:bold; width: 30%"/>  
+
+                            <h:outputText value="Nombre:" style="font-weight:bold"/> 
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.nombre}" required="true" maxlength="50" requiredMessage="Escriba un nombre para el catalogo"
+                                         label="Nombre del catalogo" style="width: 85%" /> 
+
+                            <h:outputText value="Estado:" style="font-weight:bold" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarEstado == 'S'}"/>                                      
+                            <p:selectOneMenu value="#{beanCatalogo.nuevoCatalogo.estado}" required="true" requiredMessage="Seleccione un estado"
+                                             label="Estado del catalogo" style="width: 30%" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarEstado == 'S'}" >  
+                                <f:selectItem itemLabel="Estado" itemValue="" />  
+                                <f:selectItem itemLabel="Activo" itemValue="A" />  
+                                <f:selectItem itemLabel="Inactivo" itemValue="I" />  
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Valor:" style="font-weight:bold" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarValor == 'S'}"/>  
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.valor}" required="true" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarValor == 'S'}"
+                                         requiredMessage="Digite un valor para el catalogo" converterMessage="El campo valor solo permite valores numéricos" 
+                                         maxlength="4" label="Valor del catalogo" style="width: 20%">
+                            </p:inputText>
+
+                            <h:outputLabel for="descr" value="Descripción:" style="font-weight: bold"/>  
+                            <p:inputTextarea id="descr" maxlength="100" rows="6" cols="33" value="#{beanCatalogo.nuevoCatalogo.descripcion}" style="width: 85%;"
+                                             required="true" requiredMessage="Digite la descripción" label="Descripción del catalogo"/>
+
+                            <f:facet name="footer">
+                                <p:separator style="width: 92%; margin-right: 28px;"/>
+                                <div style="width: 52%; padding-left: 165px;">
+                                    <p:commandButton id="BtnCrearCatalogo" update=":formCatalogos:catalogos, :msj" actionListener="#{beanCatalogo.crearCatalogo}" icon="ui-icon-disk" title="Guardar" value="Guardar"/>  
+                                    <p:commandButton id="BtnCancelarCatalogo"  oncomplete="DialogCata.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>  
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+
+                <h:form id="ModificarCatalogo">
+                    <p:dialog header="Modificar Catalogo" widgetVar="DialogModificarCatalogo" resizable="false" id="dlgModificarCatalogo"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+                            <h:outputText value="Código Catalogo:" style="font-weight:bold"/> 
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.idCatalogo}" style="width: 36%" disabled="true"/>  
+
+                            <h:outputText value="Código Tipo:" style="font-weight:bold"/> 
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.sweTipoCata.codigoTipo}" style="width: 36%; font-weight:bold;" disabled="true" required="true"/>                                      
+
+                            <h:outputText value="Nombre:" style="font-weight:bold;width: 50%"/>  
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.nombre}" style="font-weight:bold; width: 85%;" required="true"/>
+
+                            <h:outputText value="Estado:" style="font-weight:bold" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarEstado == 'S'}"/>                                      
+                            <p:selectOneMenu value="#{beanCatalogo.nuevoCatalogo.estado}" required="true" requiredMessage="Seleccione un estado"
+                                             label="Estado del catalogo" style="width: 40%" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarEstado == 'S'}" >  
+                                <f:selectItem itemLabel="Estado" itemValue="" />  
+                                <f:selectItem itemLabel="Activo" itemValue="A" />  
+                                <f:selectItem itemLabel="Inactivo" itemValue="I" />  
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Valor:" style="font-weight:bold" rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarValor == 'S'}"/>  
+                            <p:inputText value="#{beanCatalogo.nuevoCatalogo.valor}" required="true" requiredMessage="Digite un valor" converterMessage="El campo valor solo permite valores numéricos"
+                                         rendered="#{beanCatalogo.selected_TipoCatalogo.mostrarValor == 'S'}"
+                                         maxlength="4" label="Valor del catalogo" style="width: 36%">
+                            </p:inputText>
+
+                            <h:outputLabel for="descCata" value="Descripción:" style="font-weight: bold"/>  
+                            <p:inputTextarea id="descCata" rows="6" cols="33" value="#{beanCatalogo.nuevoCatalogo.descripcion}" required="true" style="width: 85%;" />
+
+                            <f:facet name="footer">
+                                <p:separator style="width: 92%; margin-right: 28px;"/>
+                                <div style="width: 55%; padding-left: 152px;">
+                                    <p:commandButton id="BtnActualizarCrearTipo" update=":formCatalogos:catalogos, :msj" icon="ui-icon-pencil" title="Actualizar" value="Actualizar" actionListener="#{beanCatalogo.modificarCatalogo}"/>  
+                                    <p:commandButton id="BtnCancelarActualTipo" oncomplete="DialogModificarCatalogo.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form>  
+
+                <h:form id="DeleteCata">
+                    <p:confirmDialog id ="confirmdialog" header="Eliminar Catalogo" severity="alert" showEffect="fade" 
+                                     hideEffect="explode" message="¿Desea eliminar #{beanCatalogo.selected_Catalogo.nombre}?" widgetVar="DialogEliminarCata">                                 
+                        <div class="botones_dialog" style="width: 95%;">
+                            <p:commandButton id="confirm" update=":formCatalogos:catalogos ,:msj"  styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
+                                             oncomplete="DialogEliminarTipoCata.hide()" actionListener="#{beanCatalogo.eliminarCatalogo}" value="Aceptar"/>  
+                            <p:commandButton  id="decline" value="Cancelar"  styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="DialogEliminarCata.hide();"/>       
+                        </div>
+                    </p:confirmDialog> 
+                </h:form>                          
+            </ui:define>            
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweParam" schema="SWEAMERIKA" table="SWE_PARAM">
+    <id name="codigoParam" type="short">
+      <column name="CODIGO_PARAM" precision="4" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_PARAMETROSGENERALES</param>
+      </generator>
+    </id>
+    <property name="nombre" type="string">
+      <column length="15" name="NOMBRE" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="50" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <property name="tipo" type="string">
+      <column length="15" name="TIPO" not-null="true"/>
+    </property>
+    <property name="valor" type="big_decimal">
+      <column name="VALOR" not-null="true" precision="6"/>
+    </property>
+    <property name="longitud" type="java.lang.Short">
+      <column name="LONGITUD" precision="3" scale="0"/>
+    </property>
+  </class>
+</hibernate-mapping>

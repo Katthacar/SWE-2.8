@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Factor de calibración x solicitud</ui:define>
+            <ui:define name="content"> 
+                <p:growl id="msgs" showDetail="true" /> 
+                <!-- FACTOR DE CALIBRACIÓN POR TIPO DE SOLICITUD -->
+                <p:fieldset legend="Factor de Calibración" style="width: 80%; margin-left: auto; margin-right: auto;">
+                    <h:form id="listarFCalibracion" style="width: 90%; margin-left: auto; margin-right: auto; padding-top: 20px; padding-bottom: 20px;">
+                        <p:dataTable id="ListadoFactorCalibracion" var="fCalibracion" value="#{beanFactorCalibracion.lista_fCalibracion}" 
+                                     widgetVar="Tabla_Fac_Calibracion" emptyMessage="No hay registros" >  
+                            <p:ajax event="rowToggle" listener="#{beanFactorCalibracion.consultar_historial}" update=":msgs"/>  
+                            <f:facet name="header"> 
+                                <p:commandButton id="brnAgreFacCal" value="Agregar factor de calibración" icon="ui-icon-plus" oncomplete="Factor_Calibracion.show()"
+                                                 update=":Crear_Fcalibracion:dlgCrearCalibracion" actionListener="#{beanFactorCalibracion.agregarTiposSolicitud}"/>
+                                <p:commandButton id="calcFactCal" value="Calcular factores" icon="ui-icon-gear"
+                                                 actionListener="#{beanFactorCalibracion.calcularFactor}" update=":listarFCalibracion:ListadoFactorCalibracion, :msgs"/>
+                            </f:facet>
+                            
+                            <p:column style="width:2%">
+                                <p:rowToggler id="historial"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Solicitud" style="width:60%" styleClass="columna_texto">
+                                <h:outputText id="nombre" value="#{fCalibracion.sweCata.nombre}"/>
+                            </p:column>
+                            <!--Modificado: se agregó id = "valor_calibracion" e id = "vigencia_final"-->
+                            <p:column headerText="Valor" style="width:18%" styleClass="columna_numero">
+                                <h:outputText value="#{fCalibracion.valor}"/>
+                            </p:column> 
+                            <p:column headerText="Vigencia Inicial" style="width:20%" styleClass="columna_codigo">
+                                <h:outputText id="vigencia_final" value="#{fCalibracion.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:dataTable id="historialFactorCalibracion" var="calHistorico" value="#{beanFactorCalibracion.historico_fCalibracion}" widgetVar="Tabla_Historico_Calibracion" 
+                                             paginator="true" paginatorPosition="bottom" emptyMessage="No hay registros históricos"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rows="5" 
+                                             style="width: 70%; margin-left: auto; margin-right: auto; padding-top: 10px; padding-bottom: 10px;" >  
+
+                                    <f:facet name="header">
+                                        <h:outputText value="Histórico factores de #{fCalibracion.sweCata.nombre}" />  
+                                    </f:facet>  
+                                    <p:column headerText="Código" style="width:10%"  styleClass="columna_codigo" sortBy="#{calHistorico.idFactcal}">  
+                                        <h:outputText value="#{calHistorico.idFactcal}" />  
+                                    </p:column>                                          
+                                    <p:column headerText="Valor" style="width:20%" styleClass="columna_numero" sortBy="#{calHistorico.valor}">  
+                                        <h:outputText value="#{calHistorico.valor}" />  
+                                    </p:column> 
+                                    <p:column headerText="Vigencia Inicial" style="width:20%" styleClass="columna_codigo" sortBy="#{calHistorico.vigenciaInicial}">  
+                                        <h:outputText value="#{calHistorico.vigenciaInicial}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>  
+                                    </p:column> 
+                                    <p:column headerText="Vigencia Final" style="width:20%" styleClass="columna_codigo" sortBy="#{calHistorico.vigenciaFinal}">  
+                                        <h:outputText value="#{calHistorico.vigenciaFinal}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>  
+                                    </p:column>                                        
+                                </p:dataTable>
+                            </p:rowExpansion>
+                        </p:dataTable>  
+                    </h:form> 
+                </p:fieldset>
+                <h:form id="Crear_Fcalibracion">
+                    <p:dialog header="Factor de Calibración" widgetVar="Factor_Calibracion" resizable="false" id="dlgCrearCalibracion"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+
+                            <h:outputLabel for="nombreFactor" value="Tipo Solicitud: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="nombreFactor" value="#{beanFactorCalibracion.nuevoFactor.sweCata.idCatalogo}" required="true" requiredMessage="Seleccione un tipo de solicitud"
+                                             validatorMessage="Seleccione un perfil" style="width:75%"> 
+                                <f:selectItem itemLabel="Seleccione tipo" itemValue="" />  
+                                <f:selectItems value="#{beanFactorCalibracion.tiposSolicitud}" var="cata" itemDescription="#{cata.descripcion}" itemLabel="#{cata.nombre}" itemValue="#{cata.idCatalogo}"/>                               
+                            </p:selectOneMenu> 
+
+                            <h:outputLabel for="valorFactor" value="Valor:" style="font-weight:bold"/>  
+                            <p:inputText id="valorFactor" value="#{beanFactorCalibracion.nuevoFactor.valor}" 
+                                         converterMessage="El campo valor solo permite valores numéricos"  requiredMessage="El campo valor es obligatorio"
+                                         maxlength="4" required="true" label="Valor del parametro" style="width: 70%"  /> 
+
+                            <h:outputLabel for="vInicial" value="Vigencia Inicial:" style="font-weight: bold"/>  
+                            <p:inputText id="vInicial" value="#{beanFactorCalibracion.nuevoFactor.vigenciaInicial}" style="font-weight: bold; width: 70%;"
+                                         disabled="true" required="true" label="Fecha de la vigencia inicial del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <h:outputLabel for="vFinal" value="Vigencia Final:" style="font-weight: bold; width: 70%;"/>  
+                            <p:inputText id="vFinal" value="#{beanFactorCalibracion.nuevoFactor.vigenciaFinal}" style="font-weight: bold; width: 70%;"
+                                         disabled="true" label="Fecha de la vigencia final del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <div style="width: 68%; padding-left: 95px;">
+                                    <p:commandButton id="BtnGuardarFcalibracion" update=":listarFCalibracion:ListadoFactorCalibracion, :msgs" actionListener="#{beanFactorCalibracion.guardarFactor}" icon="ui-icon-disk" title="Guardar" value="Guardar"  />  
+                                    <p:commandButton id="BtnCancelarFcalibracion"  oncomplete="Factor_Calibracion.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+            </ui:define>           
+        </ui:composition>
+    </body>
+</html>

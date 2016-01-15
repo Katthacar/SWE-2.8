@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/10/2013 08:47:54 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweCata" schema="SWEAMERIKA" table="SWE_CATA">
+    <id name="idCatalogo" type="int">
+      <column name="ID_CATALOGO" precision="6" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_CATALOGO</param>
+      </generator>
+    </id>
+    <many-to-one class="com.amerika.swe.model.SweTipoCata" fetch="select" name="sweTipoCata">
+      <column name="CODIGO_TIPO" not-null="true" precision="5" scale="0"/>
+    </many-to-one>
+    <property name="nombre" type="string">
+      <column length="50" name="NOMBRE" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="100" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <property name="estado" type="string">
+      <column length="1" name="ESTADO"/>
+    </property>
+    <property name="valor" type="big_decimal">
+      <column name="VALOR" precision="3"/>
+    </property>
+    <set inverse="true" name="sweTipoApliXFtecsForCodigoFacttecnico">
+      <key>
+        <column name="CODIGO_FACTTECNICO" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweTipoApliXFtec"/>
+    </set>
+    <set inverse="true" name="sweHomoXetapas">
+      <key>
+        <column name="ID_ETAPA" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweHomoXetapa"/>
+    </set>
+    <set inverse="true" name="sweSolisForIdLenguaje">
+      <key>
+        <column name="ID_LENGUAJE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweSoli"/>
+    </set>
+    <set inverse="true" name="sweSolisForIdPerfil">
+      <key>
+        <column name="ID_PERFIL" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweSoli"/>
+    </set>
+    <set inverse="true" name="sweSolisForIdTposolicitud">
+      <key>
+        <column name="ID_TPOSOLICITUD" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweSoli"/>
+    </set>
+    <set inverse="true" name="sweDefperfAsociahrXlengsForIdLenguaje">
+      <key>
+        <column name="ID_LENGUAJE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweDefperfAsociahrXleng"/>
+    </set>
+    <set inverse="true" name="sweSolisForIdAplicacion">
+      <key>
+        <column name="ID_APLICACION" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweSoli"/>
+    </set>
+    <set inverse="true" name="sweDefperfAsociahrXlengsForIdPerfil">
+      <key>
+        <column name="ID_PERFIL" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweDefperfAsociahrXleng"/>
+    </set>
+    <set inverse="true" name="sweSolisForIdEstado">
+      <key>
+        <column name="ID_ESTADO" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweSoli"/>
+    </set>
+    <set inverse="true" name="sweTipoApliXFtecsForCodigoTpoaplicacion">
+      <key>
+        <column name="CODIGO_TPOAPLICACION" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweTipoApliXFtec"/>
+    </set>
+    <set inverse="true" name="sweCompXsolisForIdComplejidad">
+      <key>
+        <column name="ID_COMPLEJIDAD" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCompXsoli"/>
+    </set>
+    <set inverse="true" name="sweCompXsolisForIdTpocomponente">
+      <key>
+        <column name="ID_TPOCOMPONENTE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCompXsoli"/>
+    </set>
+    <set inverse="true" name="sweEtapaXsols">
+      <key>
+        <column name="CODIGO_ETAPA" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweEtapaXsol"/>
+    </set>
+    <set inverse="true" name="sweFtecnXsols">
+      <key>
+        <column name="IDFACTTECNICO" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweFtecnXsol"/>
+    </set>
+    <set inverse="true" name="sweTcompXCompsForIdTpocomplejidad">
+      <key>
+        <column name="ID_TPOCOMPLEJIDAD" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweTcompXComp"/>
+    </set>
+    <set inverse="true" name="sweCataDetrets">
+      <key>
+        <column name="ID_TPOCOMPONENTE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCataDetret"/>
+    </set>
+    <set inverse="true" name="sweFactAmbiXsols">
+      <key>
+        <column name="IDFACTAMBIETAL" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweFactAmbiXsol"/>
+    </set>
+    <set inverse="true" name="swePorcDistXetapas">
+      <key>
+        <column name="ID_ETAPA" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SwePorcDistXetapa"/>
+    </set>
+    <set inverse="true" name="sweTcompXCompsForIdTpocomponente">
+      <key>
+        <column name="ID_TPOCOMPONENTE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweTcompXComp"/>
+    </set>
+    <set inverse="true" name="sweCompXPfuncions">
+      <key>
+        <column name="ID_CATCOMPLEJIDAD" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCompXPfuncion"/>
+    </set>
+    <set inverse="true" name="sweFactCalXTsols">
+      <key>
+        <column name="ID_TPOSOLICITUD" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweFactCalXTsol"/>
+    </set>
+    <set inverse="true" name="sweIntervalosForIdLenguaje">
+      <key>
+        <column name="ID_LENGUAJE" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweIntervalo"/>
+    </set>
+    <set inverse="true" name="sweIntervalosForIdPerfil">
+      <key>
+        <column name="ID_PERFIL" not-null="true" precision="6" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweIntervalo"/>
+    </set>
+  </class>
+</hibernate-mapping>

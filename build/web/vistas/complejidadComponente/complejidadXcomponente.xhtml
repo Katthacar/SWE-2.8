@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Complejidad x componente</ui:define>
+            <ui:define name="content"> 
+                <p:growl id="msgs" showDetail="true" /> 
+                <!-- FACTOR DE CALIBRACIÓN POR TIPO DE SOLICITUD -->                    
+                <p:fieldset id ="panel" legend="Componentes por complejidad" style="width: 80%; margin-right: auto; margin-left: auto;"> 
+                    <h:form id="listarComplXComp" >
+                        <h:panelGrid columns="1" cellpadding="5" style="width: 50%; margin-left: 196px;">
+
+                            <h:outputLabel for="lista_complejidad" value="Complejidad: " /> 
+                            <p:selectOneMenu id="lista_complejidad" value="#{beanCompl_Comp.complejidadSeleccionada}">
+                                <f:selectItem itemLabel="Seleccione complejidad" itemValue="-1" />  
+                                <f:selectItems value="#{beanCompl_Comp.list_complejidad}" var="complejidad" itemDescription="#{complejidad.descripcion}"
+                                               itemLabel="#{complejidad.nombre}" itemValue="#{complejidad.idCatalogo}"/>  
+                                <p:ajax event="change" update="ListadoComplXComp" listener="#{beanCompl_Comp.complejidad_seleccinada}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <p:dataTable id="ListadoComplXComp" var="compXcomp" value="#{beanCompl_Comp.list_complXcomp}" emptyMessage="No hay registros" style="width: 60%;margin-left: auto;margin-right: auto;margin-bottom: 20px;margin-top: 20px;"
+                                     rowKey="#{compXcomp.idTcomxcomp}" selection="#{beanCompl_Comp.seleccionado}" selectionMode="single"> 
+                            <p:ajax event="rowSelect" update="viewButton" />
+                            <f:facet name="header">
+                                <p:commandButton id="btnAgregar" value="Agregar nuevo" icon="ui-icon-plus" oncomplete="dialog.show()" disabled="#{beanCompl_Comp.complejidadSeleccionada == -1}"
+                                                 update=":crear_TCompXComp:display" actionListener="#{beanCompl_Comp.inicializar}"/>
+                            </f:facet> 
+                            <p:column headerText="Componente" style="width: 200px;">
+                                <h:outputText value="#{compXcomp.sweCataByIdTpocomponente.descripcion}" title="#{compXcomp.sweCataByIdTpocomponente.nombre}"/>
+                            </p:column> 
+                            <p:column headerText="Peso" styleClass="columna_numero" style="width: 100px;" >
+                                <h:outputText value="#{compXcomp.peso}"/>
+                            </p:column>
+                            <p:column headerText="Vigencia incial" style="width: 30%;" styleClass="columna_fecha">
+                                <h:outputText value="#{compXcomp.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <f:facet name="footer">  
+                                <p:commandButton id="viewButton" value="Ver histórico" icon="ui-icon-search" actionListener="#{beanCompl_Comp.consultar_historial}"
+                                                 disabled="#{(beanCompl_Comp.seleccionado == null) or (beanCompl_Comp.complejidadSeleccionada == -1)}" update=":form_historico:tabla_historico" 
+                                                 oncomplete="dialog_historico.show()"/>  
+                            </f:facet> 
+                        </p:dataTable> 
+                    </h:form>
+                </p:fieldset> 
+                <h:form id="crear_TCompXComp">
+                    <p:dialog header="Registar Nuevo" widgetVar="dialog" resizable="false" id="dlgCrear_tCompXComp"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+
+                            <h:outputLabel for="tipoComplejidad" value="Complejidad " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="tipoComplejidad" value="#{beanCompl_Comp.complejidadSeleccionada}" disabled="true" required="true"  validatorMessage="Seleccione un tipo de aplicación" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione complejidad" itemValue="-1" />  
+                                <f:selectItems value="#{beanCompl_Comp.list_complejidad}" var="comple" itemLabel="#{comple.nombre}" itemValue="#{comple.idCatalogo}"/>                               
+                            </p:selectOneMenu> 
+
+                            <h:outputLabel for="tipoComponente" value="Componente: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="tipoComponente" value="#{beanCompl_Comp.nevo_TcompXComp.sweCataByIdTpocomponente.idCatalogo}"
+                                             required="true" requiredMessage="Seleccione un tipo de componente" validatorMessage="Seleccione un componente" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione un componente" itemValue="-1" />  
+                                <f:selectItems value="#{beanCompl_Comp.list_componentes}" var="componente" itemDescription="#{componente.descripcion}"
+                                               itemLabel="#{componente.nombre}" itemValue="#{componente.idCatalogo}"/>                               
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="peso" value="Peso: " style="font-weight:bold;"/> 
+                            <p:inputText id="peso" value="#{beanCompl_Comp.nevo_TcompXComp.peso}"  required="true" requiredMessage="Digite el peso"
+                                         converterMessage="El campo peso solo permite valores numéricos"
+                                         maxlength="2" style="font-weight: bold; width: 25%;"/>            
+
+                            <h:outputLabel for="vInicial" value="Vigencia Inicial:" style="font-weight: bold; "/>  
+                            <p:inputText id="vInicial" value="#{beanCompl_Comp.nevo_TcompXComp.vigenciaInicial}" style="font-weight: bold; width: 90%;"
+                                         disabled="true" required="true" label="Fecha de la vigencia inicial del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <h:outputLabel for="vFinal" value="Vigencia Final:" style="font-weight: bold;"/>  
+                            <p:inputText id="vFinal" value="#{beanCompl_Comp.nevo_TcompXComp.vigenciaFinal}" style="font-weight: bold; width: 90%;"
+                                         disabled="true" label="Fecha de la vigencia final del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <div style="margin-left: 96px;" >
+                                    <p:commandButton id="BtnGuardarFcalibracion" update=":listarComplXComp:ListadoComplXComp, :msgs" actionListener="#{beanCompl_Comp.guardar}" icon="ui-icon-disk" title="Guardar" value="Guardar"/>  
+                                    <p:commandButton id="BtnCancelarFcalibracion"  oncomplete="dialog.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+
+                    </p:dialog>
+                </h:form>
+                <h:form id="form_historico">
+                    <p:dialog header="Histórico" widgetVar="dialog_historico" resizable="false" id="dialog_historico"  
+                              showEffect="fade" hideEffect="explode" modal="true">
+                        <p:dataTable id="tabla_historico" var="compXcompl" paginator="true" paginatorPosition="bottom" rows="5"
+                                     emptyMessage="No hay registros"
+                                     value="#{beanCompl_Comp.historico}" widgetVar="tablaCompXComp">
+
+                            <f:facet name="header">
+                                <h:outputText value="Prioridad #{beanCompl_Comp.seleccionado.sweCataByIdTpocomplejidad.nombre}  y componente #{beanCompl_Comp.seleccionado.sweCataByIdTpocomponente.nombre}"/>   
+                            </f:facet>
+                            <p:column headerText="Peso" styleClass="columna_numero">
+                                #{compXcompl.peso}
+                            </p:column>
+                            <p:column headerText="Vigencia Inicial" styleClass="columna_fecha">
+                                <h:outputText value="#{compXcompl.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                            <p:column headerText="Vigencia Final" styleClass="columna_fecha">
+                                <h:outputText value="#{compXcompl.vigenciaFinal}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                        </p:dataTable> 
+                    </p:dialog> 
+                </h:form>
+            </ui:define>           
+        </ui:composition>
+    </body>
+</html>

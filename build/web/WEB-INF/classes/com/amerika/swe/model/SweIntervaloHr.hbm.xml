@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SweIntervaloHr" schema="SWEAMERIKA" table="SWE_INTERVALO_HR">
+        <id name="idIntervaloHr" type="int">
+            <column name="ID_INTERVALOHR" precision="6" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_SWE_IDINTERVALOHR</param>
+            </generator>
+        </id>
+        <many-to-one class="com.amerika.swe.model.SweIntervalo" fetch="select" name="sweIntervalo">
+            <column name="ID_INTERVALO" not-null="true" precision="6" scale="0">
+                <comment>Llave foránea que apunta a la tabla SWE_INTERVALO.id_intervalo</comment>
+            </column>
+        </many-to-one>
+        <property name="horas" type="big_decimal">
+            <column name="HORAS" not-null="true" precision="6" scale="2">
+                <comment>Número de horas asociadas al intervalo</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

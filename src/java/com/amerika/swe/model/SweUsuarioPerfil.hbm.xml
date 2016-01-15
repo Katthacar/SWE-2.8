@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2013 01:46:17 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SweUsuarioPerfil" table="SWE_USUARIO_PERFIL" schema="SWEAMERIKA">
+        <composite-id name="id" class="com.amerika.swe.model.SweUsuarioPerfilId">
+            <key-property name="codigoUsuario" type="string">
+                <column name="CODIGO_USUARIO" length="15" />
+            </key-property>
+            <key-property name="codigoPerfil" type="string">
+                <column name="CODIGO_PERFIL" length="15" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="swePerfil" class="com.amerika.swe.model.SwePerfil" update="false" insert="false" fetch="select">
+            <column name="CODIGO_PERFIL" length="15" not-null="true">
+                <comment>C&#243;digo del perfil de la tabla Perfil.codigo</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sweUsuarios" class="com.amerika.swe.model.SweUsuarios" update="false" insert="false" fetch="select">
+            <column name="CODIGO_USUARIO" length="15" not-null="true">
+                <comment>C&#243;digo del usuario de la tabla Usuarios.codigo</comment>
+            </column>
+        </many-to-one>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="15" not-null="true">
+                <comment>Usuario que registra el usuario_perifl</comment>
+            </column>
+        </property>
+        <property name="programa" type="string">
+            <column name="PROGRAMA" length="50" not-null="true">
+                <comment>Programa o p&#225;gina desde donde se cre&#243; o modific&#243; el registro</comment>
+            </column>
+        </property>
+        <property name="fechaModif" type="date">
+            <column name="FECHA_MODIF" length="7" not-null="true">
+                <comment>Fecha de creaci&#243;n o modificaci&#243;n del registro</comment>
+            </column>
+        </property>
+        <property name="fechaAlta" type="date">
+            <column name="FECHA_ALTA" length="7" not-null="true">
+                <comment>Fecha en la que entra en vigencia el registro</comment>
+            </column>
+        </property>
+        <property name="fechaBaja" type="date">
+            <column name="FECHA_BAJA" length="7">
+                <comment>Fecha en la que es dado de baja el regsitro usuario_perfil</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2013 01:46:17 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SweMenu" table="SWE_MENU" schema="SWEAMERIKA">
+        <id name="codigo" type="int">
+            <column name="CODIGO" precision="4" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="sweMenu" class="com.amerika.swe.model.SweMenu" fetch="select">
+            <column name="COD_PADRE" precision="4" scale="0">
+                <comment>C&#243;digo del padre si es un submen&#250;</comment>
+            </column>
+        </many-to-one>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="15" not-null="true">
+                <comment>Usuario que registr&#243; la opci&#243;n de menu</comment>
+            </column>
+        </property>
+        <property name="programa" type="string">
+            <column name="PROGRAMA" length="50" not-null="true">
+                <comment>P&#225;gina o programa desde donde se cre&#243; o modific&#243; el registro</comment>
+            </column>
+        </property>
+        <property name="fechaModif" type="date">
+            <column name="FECHA_MODIF" length="7" not-null="true">
+                <comment>Fecha en la que se cre&#243; o modific&#243; el regsitro</comment>
+            </column>
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="40" not-null="true">
+                <comment>Nombre de la opci&#243;n de men&#250;</comment>
+            </column>
+        </property>
+        <property name="orden" type="java.lang.Integer">
+            <column name="ORDEN" precision="6" scale="0" />
+        </property>
+        <property name="icono" type="string">
+            <column name="ICONO" length="70">
+                <comment>Ruta del icono del men&#250;</comment>
+            </column>
+        </property>
+        <property name="urlMenu" type="string">
+            <column name="URL_MENU" length="100">
+                <comment>Url del men&#250;</comment>
+            </column>
+        </property>
+        <set name="sweMenus" inverse="true" order-by="CODIGO ASC">
+            <key>
+                <column name="COD_PADRE" precision="4" scale="0">
+                    <comment>C&#243;digo del padre si es un submen&#250;</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweMenu" />
+        </set>
+        <set name="sweMenuPerfils" inverse="true">
+            <key>
+                <column name="CODIGO_MENU" precision="6" scale="0" not-null="true">
+                    <comment>C&#243;digo del men&#250; tomado de la tabla Menu.codigo</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweMenuPerfil" />
+        </set>
+    </class>
+</hibernate-mapping>

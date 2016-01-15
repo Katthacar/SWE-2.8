@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">Aprobar estimación</ui:define>
+            <ui:define name="content">
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("input:visible:first").focus();
+                    });
+                </script>
+                <style type="text/css">                
+                    .div_solicitud{width: 50%;margin-left: auto;margin-right: auto;}
+                    .columna_porcentaje, .column_horas{text-align: right; }
+                    .columna_porcentaje, .column_horas{width: 20%;}
+                    .column_horas_estimadas, .column_horas_experto{width: 10%; text-align: right;}
+                    .column1_solicitud{text-align: right;width:27%;}
+                    .column2_solicitud{width:73%;padding: 2px;} 
+                    .columna1_total{width: 47%;}
+                    .columna2_total{text-align: right;width: 20%;}
+                    .columna1_total, .column2_estimacionesfuerzo, .column1_estimacionesfuerzo{text-align: right;}
+                    .column1_estimacionesfuerzo, .columna1_total, .column1_solicitud, .column1_puntofuncionales{background-color: #B8DCEC;}                   
+                    .aprobada{background-color: rgb(176, 238, 176); background-image: none;}
+                    .pf_column_det_ret_fet{text-align: right; width:5%}
+                    .pf_column_complejidad{text-align: center; width:10%}
+                    .pf_column_nombre{width:37%; text-align: left;}
+                    .pf_column_observacion{width: 50%; text-align: left; word-wrap:break-word;}
+                    .tb_colum_estimacion, .tb_column_fecha{text-align: center;}
+                    .tb_column_horas{text-align: right;}
+                    .column_esfuerzo{width: 15%; text-align: right;}
+                    .column_etapa{width: 40%;}
+                </style>
+                <p:growl id="growl" showDetail="true" life="10000" /> 
+                <p:fieldset legend="Estimaciones" toggleable="true">
+                    <div class="div_solicitud">
+                        <h:form id="form_solicitud" >
+                            <h:panelGrid columns="4" cellspacing="5" cellpadding="5">
+                                <p:outputLabel value="Códido de la solicitud" />
+                                <p:inputText id="codSolicitud" value="#{beanAprobarEstimacion.codigoSolicitud}" required="false" requiredMessage="Ingrese el código de la solicitud"
+                                             validatorMessage="Ingrese un código de solicitud valido" />
+                                <p:message for="codSolicitud" display="icon"/>
+                                <!--:form_tabla_etapas, se ha eliminado del atrib. update.-->
+                                <p:commandButton value="Buscar" update=":form_tabla_solicitudes, :growl, :tabView"
+                                                 actionListener="#{beanAprobarEstimacion.buscarEstimaciones()}" />
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                    <p:separator style="margin-top: 25px; width: 80%; " />
+                    <div style="width: 75%;margin-left: auto;margin-right: auto; padding-top: 30px;">
+                        <h:form id="form_tabla_solicitudes">
+                            <p:dataTable id="tabla_solicitudes" value="#{beanAprobarEstimacion.lista_estimaciones}" var="estimacion" emptyMessage="No hay registros"
+                                         paginator="true" rows="5" paginatorPosition="bottom" rowsPerPageTemplate="5,10" draggableColumns="true"
+                                         rowKey="#{estimacion.idEstimacion}" selection="#{beanVerEstimacion.estimacion_seleccionada}">
+                                <!--Se ha eliminado el atrib. update y el valor :form_tabla_etapas-->
+                                <p:ajax event="rowSelectRadio" update=":tabView"
+                                        listener="#{beanVerEstimacion.ajax_mostrarEstimacion()}"/>
+                   
+                                <f:facet name="header">
+                                    <h:outputLabel value="Estimaciones"/>
+                                </f:facet>
+                                <p:column selectionMode="single" style="width:2%"  />
+                                <p:column headerText="Solicitud" sortBy="#{estimacion.numSolicitud}" style="text-align: center;">
+                                    <h:outputText value="#{estimacion.numSolicitud}"/>
+                                </p:column>
+                                <p:column headerText="Código estimación" sortBy="#{estimacion.idEstimacion}" style="text-align: center;">
+                                    <h:outputText value="#{estimacion.idEstimacion}"/>
+                                </p:column>
+                                <p:column headerText="Fecha de cierre" sortBy="#{estimacion.fechaAprobacion}">
+                                    <h:outputText value="#{estimacion.fechaAprobacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>  
+                                </p:column>
+                                <p:column headerText="Usuario estima" sortBy="#{estimacion.sweUsuariosByIdUsu_estima.nombre}">
+                                    <h:outputText value="#{estimacion.sweUsuariosByIdUsu_estima.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Usuario cierra" sortBy="#{estimacion.sweUsuariosByIdUsu_estima.nombre}">
+                                    <h:outputText value="#{estimacion.sweUsuariosByIdUsu_estima.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Horas estimadas" sortBy="#{estimacion.he}"  styleClass="column_horas_estimadas">
+                                    <h:outputText value="#{estimacion.he}" />
+                                </p:column>  
+                                <p:column headerText="Horas a jucio del experto" sortBy="#{estimacion.hrje}" styleClass="column_horas_experto">
+                                    <h:outputText value="#{estimacion.hrje}" />
+                                </p:column> 
+                                <p:column headerText="Estado" sortBy="#{estimacion.sweCataByIdEstado.nombre}">
+                                    <h:outputText value="#{estimacion.sweCataByIdEstado.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Aprobada" sortBy="#{estimacion.aprobada eq 'N' ? 'No' : 'Si'}" style="text-align: center;">                                    
+                                    <h:outputText value="#{estimacion.aprobada eq 'N' ? 'No' : 'Si'}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:commandButton value="Aprobar estimación"
+                                             disabled="#{beanAprobarEstimacion.solSeleccionada!=null
+                                                         or beanAprobarEstimacion.lista_estimaciones==null
+                                                         or beanAprobarEstimacion.lista_estimaciones.size()==0}"
+                                             oncomplete="dialog_aprobar_estimacion.show();" style="margin-left: 792px; padding-top: 2px; margin-top: 5px;" />
+                        </h:form>
+                    </div>
+                    <!--modificando-->
+                    <!--<div style="width: 75%;margin-left: auto;margin-right: auto; padding-top: 16px;">-->
+                    <p:separator style=" width: 97%; margin-left: 28px;"/>
+                    <!--<h:form id="form_tabla_etapas" style="text-align: center;">-->
+                    <p:tabView id="tabView" > 
+                        <p:tab id="tabPFnoAjustados" title="PF no Ajustados" titletip="Puntos de función no ajustados" >
+                            <h:form id="form_PFnoAjustados" style="margin-left: 13%; margin-bottom: 5%">
+                                <p:panelGrid id="panel_PFnoAjustados" style="width: 90%; margin-top:20px" styleClass="tabladatos" >
+                                    <p:row>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;" colspan="6">
+                                            Conteo de Puntos Funcionales No Ajustados
+                                        </p:column>  
+                                    </p:row>
+                                    <p:row>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">Tipo de Función</p:column>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">Complejidad Funcional</p:column>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">Conteo</p:column>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">Peso</p:column>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">Puntos Funcionales (PFs)</p:column> 
+                                        <p:column styleClass="ui-state-default" style="text-align: center;">PF%</p:column> 
+                                    </p:row>                                  
+                                    <c:forEach  items="#{beanVerEstimacion.list_TipoComponentes}" var="componente" >
+                                        <c:forEach items="#{beanVerEstimacion.list_Complejidades}" var="complejidad">                                      
+                                            <p:row>  
+                                                <c:if test="#{beanVerEstimacion.indicePanel % beanVerEstimacion.list_Complejidades.size() == 0}">
+                                                    <p:column rowspan="#{beanVerEstimacion.list_Complejidades.size()}" style="font-weight: bold; width: 40%" >
+                                                        <p:commandLink oncomplete="dialog.show();return false;" style="margin-right:20px;" update=":form_aprobar"
+                                                                       actionListener="#{beanVerEstimacion.verPF(componente)}" >  
+                                                            <h:outputText value="#{componente.descripcion}" title="#{componente.nombre}"/>
+                                                        </p:commandLink>  
+                                                    </p:column>
+                                                </c:if>
+                                                <p:column style="font-weight: bold; width: 15%">#{complejidad.nombre}</p:column>
+                                                <p:column style="width: 5%" styleClass="columna_numero">#{beanVerEstimacion.mapa_conteo.get(componente.idCatalogo).get(complejidad.idCatalogo)}</p:column>
+                                                <p:column style="width: 5%" styleClass="columna_numero">#{beanVerEstimacion.mapa_pesosVigentes.get(componente.idCatalogo).get(complejidad.idCatalogo)}</p:column> 
+                                                <p:column style="width: 5%" styleClass="columna_numero">#{beanVerEstimacion.mapa_conteo.get(componente.idCatalogo).get(complejidad.idCatalogo) * beanVerEstimacion.mapa_pesosVigentes.get(componente.idCatalogo).get(complejidad.idCatalogo) }</p:column>
+                                                <c:if test="#{beanVerEstimacion.indicePanel % beanVerEstimacion.list_Complejidades.size() == 1}">
+                                                    <p:column rowspan="#{beanVerEstimacion.list_Complejidades.size()}" style="width: 5%" styleClass="columna_numero">#{beanVerEstimacion.porcentajes_PF.get(componente.idCatalogo)}#{beanVerEstimacion.porcentajes_PF.get(componente.idCatalogo) != null ? '%':''}</p:column> 
+                                                </c:if>
+                                            </p:row>
+                                        </c:forEach> 
+
+                                    </c:forEach>
+                                    <p:row>  
+                                        <p:column styleClass="ui-state-default" style="text-align: center;" colspan="4" >Total puntos funcionales no ajustados:</p:column>
+                                        <p:column styleClass="ui-state-default columna_numero">#{beanVerEstimacion.TOTAL_PF}</p:column>
+                                        <p:column styleClass="ui-state-default columna_numero">#{beanVerEstimacion.TOTAL_POCENTAJES}%</p:column>
+                                    </p:row> 
+
+                                </p:panelGrid>
+                            </h:form>
+                        </p:tab>
+                        <p:tab id="tabfactorAjuste" title="Valor Factor Ajuste" titletip="Valor factor de ajuste técnico/ambiental">  
+                            <h:form id="form_factorAjuste">
+                                <div style="width: 100%; overflow: hidden;">
+                                    <div style="width: 60%; float: left;">
+                                        <p:dataTable id="tablaAplixComp" value="#{beanVerEstimacion.factoresTecnicos}" var="apliXFacTec"
+                                                     rowIndexVar="row" paginator="true" paginatorPosition="bottom"  rows="5" rowsPerPageTemplate="5,10,#{beanVerEstimacion.factoresTecnicos.size()}"
+                                                     styleClass="tablaDatos" emptyMessage="No se han cargado factores técnicos">                                                    
+
+                                            <f:facet name="header">
+                                                <h:outputLabel value="Factores Técnicos"/>
+                                            </f:facet>
+                                            <p:column>
+                                                #{row+1}
+                                            </p:column>
+                                            <p:column headerText="Características Generales del Sistema" style="width: 40%;">
+                                                #{apliXFacTec.sweCata.nombre}
+                                            </p:column>
+                                            <p:column headerText="Influencia 0-5" style="width: 10%;" styleClass="columna_numero">                                                 
+                                                <h:outputText id="influencia" value="#{apliXFacTec.gradoInfluencia}" styleClass="columna_numero"/>
+                                            </p:column>
+                                            <p:column headerText="Descripción" style="width: 50%;">
+                                                #{apliXFacTec.sweCata.descripcion}
+                                            </p:column>
+
+                                            <p:columnGroup type="footer">  
+                                                <p:row>  
+                                                    <p:column colspan="2" footerText="Total Inluencia (TDI)" style="text-align:right"  /> 
+                                                    <p:column footerText="#{beanVerEstimacion.estimacion_seleccionada.ct}" styleClass="columna_numero" style="text-align:right"/>
+                                                    <p:column footerText="Calculado (suma de lo anterior)"/>
+                                                </p:row> 
+                                                <p:row>  
+                                                    <p:column colspan="2" footerText="Valor del Factor de Ajuste (VAF)" style="text-align:right"  /> 
+                                                    <p:column footerText="#{beanVerEstimacion.estimacion_seleccionada.vaf}"  styleClass="columna_numero" style="text-align:right"/>                                                     
+                                                    <p:column colspan="2" footerText="" style="text-align:right"  /> 
+                                                </p:row> 
+                                            </p:columnGroup> 
+                                        </p:dataTable>
+                                    </div>
+                                    <div style="width: 35%; float: right; margin-left: 5%;">
+                                        <p:dataTable id="tablaFactorAmb" styleClass="tablaDatos" value="#{beanVerEstimacion.factoresAmbientales}" var="facAmbiental" rowIndexVar="row"
+                                                     paginator="true" paginatorPosition="bottom" emptyMessage="No se encontraron factores ambientales">
+                                            <f:facet name="header">
+                                                <h:outputLabel value="Factores Ambientales"/>
+                                            </f:facet>
+
+                                            <p:column headerText="Factores Ambientales" style="width: 50%;">
+                                                #{facAmbiental.sweCata.nombre}
+                                            </p:column>
+                                            <p:column headerText="Peso" styleClass="columna_numero" style="width: 10%;">
+                                                #{facAmbiental.peso}
+                                            </p:column>
+                                            <p:column headerText="Influencia (0-5)" style="width: 20%; text-align:right;">  
+                                                <h:outputText id="influencia" value="#{facAmbiental.influencia}" styleClass="columna_numero"/>                                                 
+                                            </p:column>
+                                            <p:columnGroup type="footer">  
+                                                <p:row>  
+                                                    <p:column colspan="2" footerText="Total influencia:" style="text-align:right"  /> 
+                                                    <p:column id="totalInfAmb" footerText="#{beanVerEstimacion.totalInfluenciaAmbiental}" style="text-align:right"/>
+                                                </p:row> 
+                                                <p:row>  
+                                                    <p:column colspan="2" footerText="Factor ambiental calculado" style="text-align:right"/> 
+                                                    <p:column footerText="#{beanVerEstimacion.estimacion_seleccionada.fa}" style=" text-align: right; "/>
+                                                </p:row> 
+                                            </p:columnGroup> 
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </p:tab>
+                        <p:tab id="tabEtapas" title="Estimación Esfuerzo">
+                            <h:form id="form_etapas">
+                                <div style="width: 100%; padding-left: 141px;">
+                                    <p>
+                                        <p:panelGrid id="panel_TotalPF" columnClasses="column1_puntofuncionales, column_puntofuncionales" columns="2" style="font-size: 17px;">
+                                            <h:outputText value="Puntos Funcionales"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.tpf}"/>
+                                        </p:panelGrid>
+                                    </p>
+                                </div>
+                                <div style="width: 100%; overflow: hidden;">
+                                    <div style=" width: 40%; float: left; margin-left: 141px;">
+                                        <p:panelGrid id="panel_totales" columns="2" columnClasses="columna1_total, columna2_total"
+                                                     style="width: 90%; " styleClass="tabladatos">
+
+                                            <f:facet name="header">
+                                                <h:outputText value="Estimación Total"/>
+                                            </f:facet>
+
+                                            <h:outputText value="Conteo de Puntos de Funcion no Ajustados"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.upf}"/>
+
+                                            <h:outputText value="Ajuste del Factor de Complejidad"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.vaf}"/>
+
+                                            <h:outputText value="Conteo de Puntos de Funcion Ajustados"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.apf}"/>
+
+                                            <h:outputText value="Factor de Calibración"/> 
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.fce}"/>
+
+                                            <h:outputText value="Estimación Total Puntos De Función"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.tpf}"/>
+
+                                            <h:outputText value="Puntos de Función Por Persona Mes"/>
+                                            <h:outputText value="#{beanVerEstimacion.pfPersonaMes}"/>
+
+                                            <h:outputText value="Días Por Mes De Una Persona"/>
+                                            <h:outputText value="#{beanVerEstimacion.diasXmeses}"/>
+
+                                            <h:outputText style="font-weight: bold;" value="Alto Esfuerzo  Estimado Por Persona (En Días Persona)"/>                                     
+                                            <h:outputText style="font-weight: bold;" value="#{beanVerEstimacion.estimacion_seleccionada.tpf.divide(beanVerEstimacion.pfPersonaMes).multiply(beanVerEstimacion.diasXmeses)}"/>
+
+                                        </p:panelGrid>
+                                    </div>
+                                    <div style=" width: 40%; float: right; margin-right: 93px;">                                    
+                                        <p:panelGrid id="panel_estimacionEsfuerzo" columns="2"
+                                                     style="width: 90%;" 
+                                                     columnClasses="column1_estimacionesfuerzo, column2_estimacionesfuerzo" 
+                                                     styleClass="tabladatos" >
+
+                                            <f:facet name="header">
+                                                <h:outputText value="Estimación del esfuerzo"/>
+                                            </f:facet>
+                                            <h:outputText value="Horas proyecto"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.he}"/>
+                                            <h:outputText value="Horas del Experto"/>
+                                            <h:outputText value="#{beanVerEstimacion.estimacion_seleccionada.hrje}" 
+                                                          style=" width: 96%; text-align: right;" />
+
+                                            <h:outputText value="Productividad estimada por horas"/>
+                                            <h:outputText value="#{beanVerEstimacion.porcentajeProductividadhr}"/>
+                                            <h:outputText value="Horas por día"/>
+                                            <h:outputText value="#{beanVerEstimacion.horasXdia}"/>
+                                            <h:outputText value="Días por mes"/>
+                                            <h:outputText value="#{beanVerEstimacion.diasXmeses}"/>                                            
+                                        </p:panelGrid>
+
+                                    </div>
+                                </div>
+                                <div style=" width: 100%; margin-top: 25px;">
+                                    <p>                                        
+                                        <p:dataTable id="tablaEsfuerzoxEtapa" emptyMessage="No hay datos" styleClass="tablaDatos"
+                                                     draggableColumns="true"  rowIndexVar="row" 
+                                                     value="#{beanVerEstimacion.list_etapas}" var="esfuerzoXetapa"
+                                                     style="width: 77%; padding-left: 140px;">                                    
+                                            <f:facet name="header">  
+                                                Esfuerzo por etapas
+                                            </f:facet>
+                                            <p:column headerText="Etapa" sortBy="#{esfuerzoXetapa.sweCata.nombre}" styleClass="column_etapa">#{esfuerzoXetapa.sweCata.nombre}</p:column>
+                                            <p:column headerText="Porcentaje Estimado" sortBy="#{esfuerzoXetapa.porcenEstimado}" styleClass="column_esfuerzo">
+                                                <h:outputText value="#{esfuerzoXetapa.porcenEstimado}%"/> 
+                                            </p:column>
+                                            <p:column headerText="Horas Estimadas" sortBy="#{esfuerzoXetapa.horasEstimadas}" styleClass="column_esfuerzo">
+                                                <h:outputText value="#{esfuerzoXetapa.horasEstimadas}"/> 
+                                            </p:column>
+                                            <p:column headerText="Porcentaje Real" sortBy="#{esfuerzoXetapa.porcenReal}" styleClass="column_esfuerzo">
+                                                <h:outputText value="#{esfuerzoXetapa.porcenReal eq null ? '0' : esfuerzoXetapa.porcenReal}%" styleClass="columna_numero"/> 
+                                            </p:column>
+                                            <p:column headerText="Horas Reales" sortBy="#{esfuerzoXetapa.horasReales}" styleClass="column_esfuerzo">
+                                                <h:outputText value="#{esfuerzoXetapa.horasReales}"/> 
+                                            </p:column>                                    
+                                            <p:columnGroup type="footer">  
+                                                <p:row>  
+                                                    <p:column footerText="Totales" style="text-align:right"  /> 
+                                                    <p:column footerText="#{beanVerEstimacion.totalPorcentajesEst}%" style="text-align:right"/>
+                                                    <p:column footerText="#{beanVerEstimacion.totalHorasEstimadas}" style="text-align:right"/>
+                                                    <p:column footerText="#{beanVerEstimacion.totalPorcentajeReal}%" style="text-align:right"/>
+                                                    <p:column footerText="#{beanVerEstimacion.totalHorasReales}" style="text-align:right"/> 
+                                                </p:row>
+                                            </p:columnGroup>
+                                        </p:dataTable>
+                                    </p>
+                                </div>
+                            </h:form>
+                        </p:tab>                          
+                    </p:tabView>
+
+                    <!--</h:form>-->
+                </p:fieldset>
+                <!--</div>-->
+                <!--Fin modificación-->
+
+                <h:form id="form_aprobar">
+                    <p:confirmDialog id ="dialog_aprobar_estimacion" header="Aprobar estimación" closable="false"
+                                     severity="alert" showEffect="fade" hideEffect="explode" style="height: 155px !important;"
+                                     message="¿Realmente desea aprobar la estimación?" widgetVar="dialog_aprobar_estimacion">                         
+                        <p style="text-align: right; height: 50px;padding-top: 0px; margin-top: 0px;">
+                            <p:commandButton id="btn_confirmar_apr" styleClass="ui-confirmdialog-yes" actionListener="#{beanAprobarEstimacion.aprobarEstimacion()}"
+                                             icon="ui-icon-check" oncomplete="dialog_aprobar_estimacion.hide()" value="Si"
+                                             update=":form_tabla_solicitudes, :growl" />
+                            <p:commandButton id="btn_cancelar_apr" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                                             oncomplete="dialog_aprobar_estimacion.hide()" value="No"/>
+                        </p> 
+                    </p:confirmDialog> 
+                </h:form>
+                <!--</p:fieldset>-->
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

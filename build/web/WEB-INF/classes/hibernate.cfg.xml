@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@10.6.6.18:1521:desarrollo</property>
+    <property name="hibernate.connection.username">sweamerika</property>
+    <property name="hibernate.connection.password">amerikadesa</property>
+    <property name="hibernate.c3p0.min_size">2</property>
+    <property name="hibernate.c3p0.max_size">15</property>
+    <property name="hibernate.c3p0.timeout">300</property>
+    <property name="hibernate.c3p0.max_statements">50</property>
+    <property name="hibernate.c3p0.idle_test_period">36000</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.jdbc.batch_size">20</property>
+    <property name="hibernate.show_sql">true</property>
+    <mapping resource="com/amerika/swe/model/SweCataDetret.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweTipoApliXFtec.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweTipoCata.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweCata.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweParam.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweEtapaXsol.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweHomoXetapa.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweCompXPfuncion.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweFtecnXsol.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweTcompXComp.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SwePorcDistXetapa.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweSoli.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweDefperfAsociahrXleng.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweFactAmbiXsol.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweCompXsoli.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweFactCalXTsol.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweTipoDetret.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweUsuarios.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweUsuarioPerfil.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SwePerfil.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweMenu.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweMenuPerfil.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweFuncionPerfil.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweFuncion.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SwePronostico.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweIntervalo.hbm.xml"/>
+    <mapping resource="com/amerika/swe/model/SweIntervaloHr.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

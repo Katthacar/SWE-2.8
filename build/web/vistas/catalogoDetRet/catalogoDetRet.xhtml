@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Caracterización de la complejidad</ui:define>
+            <ui:define name="content">
+                <p:growl id="growl" showDetail="true" life="5000" />
+                <!-- CARACTERIZACIÓN DE LA COMPLEJIDAD -->
+                <p:fieldset legend="Caracterización de la complejidad" style="width: 80%; margin-left: auto; margin-right: auto; margin-top: 30px;" collapsed="false"  toggleable="true">                    
+                    <h:form id="form_caracterizacion" style="width: 80%; margin-left: auto; margin-right: auto;">
+                        <div style="width: 100%; padding-bottom: 10px;">
+                            <h:panelGrid columns="1" style="width: 100%;">
+                                <h:outputLabel for=":form_caracterizacion:lista_componente" value="Componente: " /> 
+                                <p:selectOneMenu id="lista_componente" style="width: 200px;"
+                                                 value="#{beanCaracterizacionComplejidad.idComponenteSeleccionado}">
+                                    <f:selectItem itemLabel="Seleccione componente" itemValue="-1" />  
+                                    <f:selectItems value="#{beanCaracterizacionComplejidad.list_componentes}" var="componente" itemLabel="#{componente.descripcion}" itemDescription="#{componente.nombre}" itemValue="#{componente.idCatalogo}"/>  
+                                    <p:ajax event="change" listener="#{beanCaracterizacionComplejidad.ajaxSelectedComponente}"
+                                            update="det, ret_ftr, intervalosRetFtr, intervalosDet, :form_caracterizacionTabla:tableCaracterizacion"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </div>
+                        <p:separator/>
+                        <div style="width: 100%; overflow: hidden; padding-top: 15px; padding-bottom: 10px;">                                
+                            <div style="width: 50%; float: left;">
+                                <h:panelGrid columns="1" style="width: 100%">
+                                    <h:outputLabel for="ret_ftr" value="Ret/Ftr: " /> 
+                                    <p:selectOneMenu id="ret_ftr" style="width: 200px;"
+                                                     value="#{beanCaracterizacionComplejidad.id_retFtrSeleccionado}">
+                                        <f:selectItem itemLabel="Seleccione función" itemValue="" />  
+                                        <f:selectItems value="#{beanCaracterizacionComplejidad.list_RetFtr}" var="retFtr" itemDescription="#{retFtr.descripcion}" itemLabel="#{retFtr.nombre}" itemValue="#{retFtr.codigoTipoDetret}"/>  
+                                        <p:ajax event="change" listener="#{beanCaracterizacionComplejidad.ajaxSelectRetFtr()}"
+                                                update="intervalosRetFtr"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:dataTable id="intervalosRetFtr" var="intervaRetFtr" value="#{beanCaracterizacionComplejidad.list_intervalos2}" rowIndexVar="row"
+                                             selectionMode="single"  rowKey="#{intervaRetFtr.idcatalogoDetret}" emptyMessage="No hay intervalos"
+                                             selection="#{beanCaracterizacionComplejidad.intervalo2_seleccionado}" styleClass="tablaDatos"  style="width: 70%; padding-top: 10px;">  
+
+                                    <f:facet name="header">                                     
+                                        Intervalos
+                                    </f:facet> 
+                                    <p:column headerText="#" styleClass="columna_numero" style="width:5%;"> 
+                                        <h:outputText value="#{row+1}"/>                                    
+                                    </p:column>
+
+                                    <p:column headerText="Intervalos" style="width:50%;">  
+                                        <h:outputText style="font-weight:bold" value="#{intervaRetFtr.rangoInicial} - #{(intervaRetFtr.rangoFinal == null ? 'o más' : intervaRetFtr.rangoFinal)}"/>
+                                    </p:column>  
+                                </p:dataTable>
+
+                            </div>
+                            <div style="width: 50%; float: right;">
+                                <h:panelGrid columns="1" style="width: 100%; padding-left: 115px;">
+                                    <h:outputLabel for="det" value="Det: " /> 
+                                    <p:selectOneMenu id="det" style="width: 200px;"
+                                                     value="#{beanCaracterizacionComplejidad.id_detSeleccionado}">
+                                        <f:selectItem itemLabel="Seleccione función" itemValue="" />  
+                                        <f:selectItems value="#{beanCaracterizacionComplejidad.list_Det}" var="det" itemDescription="#{det.descripcion}" itemLabel="#{det.nombre}" itemValue="#{det.codigoTipoDetret}"/>  
+                                        <p:ajax event="change" listener="#{beanCaracterizacionComplejidad.ajaxSelectDet}"
+                                                update="intervalosDet"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                                <p:dataTable id="intervalosDet" var="intervaF1" value="#{beanCaracterizacionComplejidad.list_intervalos1}" rowIndexVar="row"
+                                             selectionMode="single" rowKey="#{intervaF1.idcatalogoDetret}" emptyMessage="No hay intervalos"
+                                             selection="#{beanCaracterizacionComplejidad.intervalo1_seleccionado}" styleClass="tablaDatos" 
+                                             style="width: 70%; padding-top: 10px; padding-left: 118px;">  
+
+                                    <f:facet name="header">                                     
+                                        Intervalos
+                                    </f:facet>                                         
+                                    <p:column headerText="#" styleClass="columna_numero" style="width:5%;"> 
+                                        <h:outputText value="#{row+1}"/>                                    
+                                    </p:column>
+                                    <p:column headerText="Intervalos" style="width:50%;">
+                                        <h:outputText style="font-weight:bold" value="#{intervaF1.rangoInicial} - #{(intervaF1.rangoFinal == null ? 'o más' : intervaF1.rangoFinal)}"/>
+                                    </p:column>  
+                                </p:dataTable>
+
+                            </div>
+                        </div>
+                        <div style="width: 100%; overflow: hidden;">
+                            <div style="width: 50%; float: left;">
+                                <h:panelGrid id="panel_radio" columns="2" style="margin-bottom:10px;" cellspacing="10">  
+                                    <h:outputLabel value="Complejidad: " for="radio_complejidad"  />  
+                                    <p:selectOneRadio id="radio_complejidad" value="#{beanCaracterizacionComplejidad.id_ComplejidadSeleccionada}"  required="true" requiredMessage="Selecciones una complejidad">                                          
+                                        <f:selectItems  value="#{beanCaracterizacionComplejidad.list_complejidades}" var="complejidad"  itemDescription="#{complejidad.descripcion}"
+                                                        itemLabel="#{complejidad.nombre}" itemValue="#{complejidad.idCatalogo}"/>
+                                        <p:ajax event="change" listener="#{beanCaracterizacionComplejidad.ajaxRradioComplejidad}" />
+                                    </p:selectOneRadio>  
+                                </h:panelGrid>
+                            </div>
+                            <div style="width: 50%; float: right;">
+                                <div style="width: 70%;padding-left: 116px; padding-top: 10px;margin-left: auto;margin-right: auto; text-align: right;">
+                                    <p:commandButton id="btnAgregar" value="Agregar" icon="ui-icon-plus" actionListener="#{beanCaracterizacionComplejidad.btnAgregar()}"
+                                                     update=":form_caracterizacionTabla,  radio_complejidad, intervalosRetFtr, intervalosDet, :growl"/>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>                         
+                    <div style="width: 80%;margin-left: auto;margin-right: auto;">
+                        <p:separator style="width: 100%"/>
+                        <h:form id="form_caracterizacionTabla" >
+                            <p:dataTable id="tableCaracterizacion" var="caracterizacion" value="#{beanCaracterizacionComplejidad.list_compXfuncion}" rowIndexVar="row"
+                                         styleClass="tablaDatos"  style="width: 100%; padding-top: 10px;" emptyMessage="No se han agregado datos"
+                                         selectionMode="single" rowKey="#{caracterizacion.id}" 
+                                         selection="#{beanCaracterizacionComplejidad.compXpfuncion_seleccionado}">  
+
+                                <f:facet name="header" >
+                                    Caracterización de la complejidad
+                                </f:facet>
+                                <p:column headerText="#" styleClass="columna_numero" style="width:2%;" > 
+                                    <h:outputText value="#{row+1}"/>                                    
+                                </p:column>
+
+                                <p:column headerText="Componente" sortBy="#{caracterizacion.sweCataDetretByIdDet.sweCata.descripcion}" style="width:28%;" >
+                                    #{caracterizacion.sweCataDetretByIdDet.sweCata.descripcion}
+                                </p:column> 
+
+                                <p:column headerText="P. Función Ret/Ftr" sortBy="#{caracterizacion.sweCataDetretByIdRetftr.sweTipoDetret.nombre} #{caracterizacion.sweCataDetretByIdRetftr.rangoInicial} - #{caracterizacion.sweCataDetretByIdRetftr.rangoFinal !=null ? caracterizacion.sweCataDetretByIdRetftr.rangoFinal : 'o más'}"  
+                                          style="width:28%"> 
+                                    #{caracterizacion.sweCataDetretByIdRetftr.sweTipoDetret.nombre} #{caracterizacion.sweCataDetretByIdRetftr.rangoInicial} - #{caracterizacion.sweCataDetretByIdRetftr.rangoFinal !=null ? caracterizacion.sweCataDetretByIdRetftr.rangoFinal : 'o más'}
+                                </p:column>
+
+                                <p:column headerText="P. Función Det"  sortBy="#{caracterizacion.sweCataDetretByIdDet.sweTipoDetret.nombre} #{caracterizacion.sweCataDetretByIdDet.rangoInicial} - #{caracterizacion.sweCataDetretByIdDet.rangoFinal != null ? caracterizacion.sweCataDetretByIdDet.rangoFinal : 'o más'}" 
+                                          style="width:28%"> 
+                                    #{caracterizacion.sweCataDetretByIdDet.sweTipoDetret.nombre} #{caracterizacion.sweCataDetretByIdDet.rangoInicial} - #{caracterizacion.sweCataDetretByIdDet.rangoFinal != null ? caracterizacion.sweCataDetretByIdDet.rangoFinal : 'o más'}
+                                </p:column> 
+
+                                <p:column headerText="Complejidad" sortBy="#{caracterizacion.sweCata.nombre}"  style="width:10%"> 
+                                    #{caracterizacion.sweCata.nombre}
+                                </p:column>
+
+                                <p:column style="width:5%"> 
+                                    <p:commandButton id="BtnEliminar_tipocata" update=":growl" icon="ui-icon-trash" title="Eliminar" actionListener="#{beanCaracterizacionComplejidad.dialogEliminarElemento(false)}">  
+                                        <f:setPropertyActionListener value="#{caracterizacion}"
+                                                                     target="#{beanCaracterizacionComplejidad.compXpfuncion_seleccionado}"/>  
+                                    </p:commandButton>  
+                                </p:column>
+                            </p:dataTable>
+                            <div style="padding-top: 10px;text-align: right;">
+                                <p:commandButton id='btnGuardarCambios' value="Guardar nuevos"  icon="ui-icon-disk"
+                                                 actionListener="#{beanCaracterizacionComplejidad.btnGuardarCambios}"
+                                                 update="tableCaracterizacion, :growl" disabled="#{beanCaracterizacionComplejidad.list_compXfuncion.size()==0}"/>
+                            </div>
+
+                            <p:confirmDialog id ="confirmdialog" header="Eliminar elemento" severity="alert" showEffect="fade" 
+                                             hideEffect="explode" message="¿Desea eliminar el elemento de la tabla?" widgetVar="DialogEliminar">                                  
+                                <div style="padding-left: 93px;">
+                                    <p:commandButton id="confirm" update="tableCaracterizacion, btnGuardarCambios, :growl" 
+                                                     styleClass="ui-confirmdialog-yes" icon="ui-icon-check" oncomplete="DialogEliminar.hide()"
+                                                     actionListener="#{beanCaracterizacionComplejidad.dialogEliminarElemento(true)}" value="Aceptar"/>  
+                                    <p:commandButton  id="decline" value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="DialogEliminar.hide();"/>       
+                                </div>
+                            </p:confirmDialog> 
+                        </h:form>
+                    </div>
+                </p:fieldset> 
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

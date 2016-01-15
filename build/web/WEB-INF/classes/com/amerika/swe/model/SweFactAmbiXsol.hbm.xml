@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweFactAmbiXsol" schema="SWEAMERIKA" table="SWE_FACT_AMBI_XSOL">
+    <composite-id class="com.amerika.swe.model.SweFactAmbiXsolId" name="id">
+      <key-property name="idfactambietal" type="int">
+        <column name="IDFACTAMBIETAL" precision="6" scale="0"/>
+      </key-property>
+      <key-property name="idEstimacion" type="int">
+        <column name="ID_ESTIMACION" precision="9" scale="0"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" insert="false" name="sweCata" update="false">
+      <column name="IDFACTAMBIETAL" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweSoli" fetch="select" insert="false" name="sweSoli" update="false">
+      <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+    </many-to-one>
+    <property name="influencia" type="java.lang.Integer">
+      <column name="INFLUENCIA" precision="1" scale="0"/>
+    </property>
+    <property name="peso" type="big_decimal">
+      <column name="PESO" not-null="true" precision="3" scale="2"/>
+    </property>
+  </class>
+</hibernate-mapping>

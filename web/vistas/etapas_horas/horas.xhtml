@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Horas x lenguaje</ui:define>
+            <ui:define name="content">
+                <p:growl id="growl" showDetail="true" life="5000" />
+
+                <p:fieldset legend="Ver perfiles por lenguajes" 
+                            style="width: 80%;margin-left: auto;margin-right: auto; margin-bottom: 20px;" collapsed="false"  toggleable="true"> 
+                    <h:form id="form" style="width: 70%;margin-left: auto;margin-right: auto;margin-bottom: 20px;margin-top: 15px;">  
+                        <p:dataTable id="salesTable" var="perfilLenguaje" 
+                                     value="#{beanPefilLenguaje.list_perfilLenguaje}" >  
+                            <f:facet name="header" >  
+                                Esfuerzo 
+                            </f:facet>  
+                            <p:columnGroup type="header">  
+                                <p:row>  
+                                    <p:column rowspan="3" headerText="Lenguajes" />  
+                                    <p:column colspan="5" headerText="Horas X Punto Funcional" />  
+                                </p:row> 
+                                <p:row>  
+                                    <p:column headerText="Senior" /> 
+                                    <p:column headerText="Semi - Senior" /> 
+                                    <p:column headerText="Junior" />    
+                                </p:row>  
+                            </p:columnGroup>
+                            <p:column styleClass="columna_texto">  
+                                #{perfilLenguaje.lenguaje}  
+                            </p:column>  
+                            <p:column styleClass="columna_numero">  
+                                #{perfilLenguaje.horas_senior}
+                            </p:column>  
+                            <p:column styleClass="columna_numero">  
+                                #{perfilLenguaje.horas_semiSenior}  
+                            </p:column>  
+                            <p:column styleClass="columna_numero">  
+                                #{perfilLenguaje.horas_junior} 
+                            </p:column>  
+                        </p:dataTable>  
+                    </h:form>  
+                </p:fieldset>
+                <p:fieldset legend="Agregar perfiles por lenguaje" style="width: 80%;margin-left: auto;margin-right: auto;"
+                            collapsed="true"  toggleable="true">
+                    <h:form id="form2" style="width: 70%;margin-left: auto; margin-right: auto; margin-bottom: 20px;">  
+                        <h:panelGrid columns="1" cellpadding="5" style="margin-left: -8px; margin-bottom: 5px;">
+                            <h:outputLabel for="lenguaje1" value="Lenguaje: " /> 
+                            <p:selectOneMenu id="lenguaje1" value="#{beanPefilLenguaje.idLenguajeSeleccionado}">
+                                <f:selectItem itemLabel="Seleccione lenguaje" itemValue="0" />  
+                                <f:selectItems value="#{beanPefilLenguaje.lenguajes_historial}" var="len" itemDescription="#{len.descripcion}"
+                                               itemLabel="#{len.nombre}" itemValue="#{len.idCatalogo}"/>  
+                                <p:ajax event="change" update="ListadoPerxLeg, :crear_TCompXComp" listener="#{beanPefilLenguaje.lenguaje_seleccinado}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <p:dataTable id="ListadoPerxLeg" var="perXleg" value="#{beanPefilLenguaje.list_perXleng}" rowKey="#{perXleg.idPerfhrleng}"  
+                                     emptyMessage="No hay registros" selection="#{beanPefilLenguaje.seleccionado}" selectionMode="single"> 
+                            <p:ajax event="rowSelect" update="viewButton" />
+                            <f:facet name="header">
+                                <p:commandButton id="btnAgregar2" value="Agregar nuevo" icon="ui-icon-plus" actionListener="#{beanPefilLenguaje.inicializar}"
+                                                 disabled="#{beanPefilLenguaje.idLenguajeSeleccionado==0}" update=":crear_TCompXComp" oncomplete="dialog.show()"/> 
+                            </f:facet> 
+
+                            <p:column headerText="Perfil" style="width: 200px;">
+                                <h:outputText value="#{perXleg.sweCataByIdPerfil.nombre}"/>
+                            </p:column> 
+                            <p:column headerText="Horas" styleClass="columna_numero" style="width: 100px;" >
+                                <h:outputText value="#{perXleg.horas}"/>
+                            </p:column>
+                            <p:column headerText="Vigencia incial" style="width: 30%;" styleClass="columna_fecha">
+                                <h:outputText value="#{perXleg.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <f:facet name="footer">  
+                                <p:commandButton id="viewButton" value="Ver histórico" icon="ui-icon-search" actionListener="#{beanPefilLenguaje.historial}" 
+                                                 disabled="#{(beanPefilLenguaje.idLenguajeSeleccionado==0) or (beanPefilLenguaje.seleccionado==null)}" update=":historico_TCompXComp:tabla_historico" oncomplete="dialog_historico.show()"/>  
+                            </f:facet> 
+                        </p:dataTable>  
+                    </h:form>
+                </p:fieldset>  
+
+                <h:form id="crear_TCompXComp">
+                    <p:dialog header="Registar Nuevo" widgetVar="dialog" resizable="false" id="dlgCrear_tCompXComp"  
+                              showEffect="fade" hideEffect="explode" modal="true"> 
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;"> 
+                            <h:outputLabel for="lenguaje" value="Lenguaje: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="lenguaje" value="#{beanPefilLenguaje.nuevo_perXlen.sweCataByIdLenguaje.idCatalogo}" 
+                                             validatorMessage="Seleccione lenguaje" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione lenguaje" itemValue="0" />  
+                                <f:selectItems value="#{beanPefilLenguaje.lenguajes}" var="lenguaje" itemDescription="#{lenguaje.descripcion}" itemLabel="#{lenguaje.nombre}" itemValue="#{lenguaje.idCatalogo}"/>                               
+                            </p:selectOneMenu> 
+                            <h:outputLabel for="perfil" value="Perfil: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="perfil" value="#{beanPefilLenguaje.nuevo_perXlen.sweCataByIdPerfil.idCatalogo}" 
+                                             validatorMessage="Seleccione un perfil" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione perfil" itemValue="0" />  
+                                <f:selectItems value="#{beanPefilLenguaje.perfiles}" var="perfil" itemDescription="#{perfil.descripcion}" itemLabel="#{perfil.nombre}" itemValue="#{perfil.idCatalogo}"/>                               
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="horas" value="Horas : " style="font-weight:bold;"/> 
+                            <p:inputText id="horas" value="#{beanPefilLenguaje.nuevo_perXlen.horas}" maxlength="6"  converterMessage="El campo horas solo permite valores numéricos"
+                                         style="font-weight: bold; width: 45%;"/>            
+
+                            <h:outputLabel for="vInicial" value="Vigencia Inicial:" style="font-weight: bold; "/>  
+                            <p:inputText id="vInicial" value="#{beanPefilLenguaje.nuevo_perXlen.vigenciaInicial}" style="font-weight: bold; width: 70%;"
+                                         disabled="true" required="true" 
+                                         label="Fecha de la vigencia inicial del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <h:outputLabel for="vFinal" value="Vigencia Final:" style="font-weight: bold;"/>  
+                            <p:inputText id="vFinal" value="#{beanPefilLenguaje.nuevo_perXlen.vigenciaFinal}" style="font-weight: bold; width: 70%;"
+                                         disabled="true" label="Fecha de la vigencia final del factor" validatorMessage="true">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </p:inputText>
+
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <div style="padding-left: 96px;">
+                                    <p:commandButton id="BtnGuardarFcalibracion" update=":form:salesTable, :form2:ListadoPerxLeg, :growl" actionListener="#{beanPefilLenguaje.guardar}" icon="ui-icon-disk" title="Guardar" value="Guardar"/>  
+                                    <p:commandButton id="BtnCancelarFcalibracion"  oncomplete="dialog.hide()" update="@this" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>
+                </h:form>
+                <h:form id="historico_TCompXComp">
+                    <p:dialog header="Histório" widgetVar="dialog_historico" resizable="false" id="dialog_historico"  
+                              showEffect="fade" hideEffect="explode" modal="true">
+                        <p:dataTable id="tabla_historico" var="perXleng" paginator="true" paginatorPosition="bottom" rows="5"
+                                     value="#{beanPefilLenguaje.historico}" widgetVar="tablaHistorico" emptyMessage="No hay registros" >
+                            <f:facet name="header">
+                                <h:outputText value="Lenguaje #{beanPefilLenguaje.seleccionado.sweCataByIdLenguaje.nombre}  y perfil #{beanPefilLenguaje.seleccionado.sweCataByIdPerfil.nombre}"/>   
+                            </f:facet>
+                            <p:column headerText="Horas" styleClass="columna_numero">
+                                #{perXleng.horas}
+                            </p:column>
+                            <p:column headerText="Vigencia Inicial" styleClass="columna_fecha">
+                                <h:outputText value="#{perXleng.vigenciaInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                            <p:column headerText="Vigencia Final" styleClass="columna_fecha">
+                                <h:outputText value="#{perXleng.vigenciaFinal}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>  
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

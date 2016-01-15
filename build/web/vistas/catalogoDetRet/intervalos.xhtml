@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Definición de intervalos</ui:define>
+            <ui:define name="content">
+                <!-- DEFINICIÓN DE INTERVALOS -->
+                <p:growl id="growl" showDetail="true" life="10000" />
+                <p:fieldset legend="Definición de intervalos" style="margin-left: auto;margin-right: auto;width: 80%;" collapsed="false"  toggleable="true">
+                    <h:form id="form_agregar">
+                        <div style="width: 50%;margin-left: auto;margin-right: auto; padding-bottom: 15px;">
+                            <h:panelGrid columns="2" cellspacing="20" style="width: 100%;">
+                                <h:outputLabel for="lista_componente" value="Componente: " /> 
+                                <p:selectOneMenu id="lista_componente"  style="width: 200px;"
+                                                 value="#{beanCatalogoDetRet.idComponente_seleccionado}">
+                                    <f:selectItem itemLabel="Seleccione componente" itemValue="-1" />  
+                                    <f:selectItems value="#{beanCatalogoDetRet.list_componentes}" var="componente" itemLabel="#{componente.descripcion}"
+                                                  itemDescription="#{componente.nombre}" itemValue="#{componente.idCatalogo}"/>  
+                                    <p:ajax event="change" update="lista_tipoDetRet, tableCataDetRet" listener="#{beanCatalogoDetRet.ajaxSelectedComponente}" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel for="lista_tipoDetRet" value="Tipo: " /> 
+                                <p:selectOneMenu id="lista_tipoDetRet" style="width: 200px;"
+                                                 value="#{beanCatalogoDetRet.tipoDetRet_seleccionado.codigoTipoDetret}">
+                                    <f:selectItem itemLabel="Seleccione tipo" itemValue="-1" />  
+                                    <f:selectItems value="#{beanCatalogoDetRet.list_tipoDetRetXtipoComp}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.codigoTipoDetret}" itemDescription="#{tipo.descripcion}"/>  
+                                    <p:ajax event="change" update="tableCataDetRet"  listener="#{beanCatalogoDetRet.ajaxSelectedTipoDetRet}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </div>
+                        <div style="width: 50%;margin-left: auto;margin-right: auto;">
+                     <!--       <p:contextMenu for="tableCataDetRet">  
+                                <p:menuitem value="Eliminar" update="tableCataDetRet" actionListener="{beanCatalogoDetRet.agregarFilaDataTable}" icon="ui-icon-plus"/>   
+                            </p:contextMenu> -->
+
+                            <p:dataTable id="tableCataDetRet" var="cataDetRet" value="#{beanCatalogoDetRet.list_Originales_CataDetRet}" rowIndexVar="row"
+                                         styleClass="tablaDatos"  style="width: 100%" editable="true" editMode="row" emptyMessage="No hay Intervalos en la tabla">  
+                                
+                                <p:ajax event="rowEdit" listener="#{beanCatalogoDetRet.onCellEdit}" update="tableCataDetRet, :form_agregar:btnGuardar, :growl" />
+
+                                <f:facet name="header">                                     
+                                    <p:commandButton id="btnAgregar" value="Agregar intervalo" disabled="#{!beanCatalogoDetRet.btnEditar}"
+                                                     icon="ui-icon-plus" update="tableCataDetRet" actionListener="#{beanCatalogoDetRet.agregarFilaDataTable}"/>
+                                </f:facet>  
+                                <p:column headerText="#" styleClass="columna_numero" style="width:5%;"> 
+                                    <h:outputText value="#{row+1}"/>                                    
+                                </p:column>  
+                                <p:column headerText="Mínimo" styleClass="columna_numero" style="width:41%;">
+                                    <p:cellEditor>  
+                                        <f:facet name="output"><h:outputText value="#{cataDetRet.rangoInicial}" /></f:facet>
+                                        <f:facet name="input"><p:inputText id="valorMinimo"  value="#{cataDetRet.rangoInicial}" style="width:96%" label="Valor minimo"/></f:facet>  
+                                    </p:cellEditor>  
+                                </p:column>  
+
+                                <p:column headerText="Máximo" styleClass="columna_numero" style="width:41%;">  
+                                    <p:cellEditor>  
+                                        <f:facet name="output"><h:outputText value="#{cataDetRet.rangoFinal}" /></f:facet>
+                                        <f:facet name="input"><p:inputText id="valorMaximo" value="#{cataDetRet.rangoFinal}" style="width:96%" label="Valor máximo"/></f:facet>  
+                                    </p:cellEditor>  
+                                </p:column> 
+                                <p:column style="width:12%; text-align: center;">  
+                                    <p:rowEditor />  
+                                </p:column> 
+                            </p:dataTable>
+                            <div style="text-align: right;padding-top: 15px;">                               
+                                <p:commandButton id="btnGuardar" value="Guardar cambios" disabled="#{beanCatalogoDetRet.disable_btnGuardar}"
+                                                 icon="ui-icon-disk" update="tableCataDetRet, :growl" actionListener="#{beanCatalogoDetRet.registrarIntervalos}"/>
+                            </div>
+                        </div>
+                    </h:form>
+                </p:fieldset>
+            </ui:define>  
+        </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">Abrir estimación cerrada</ui:define>
+
+            <ui:define name="content">
+                <style type="text/css">                
+                    .div_solicitud{width: 50%;margin-left: auto;margin-right: auto;}
+                </style>
+                <p:growl id="growl" showDetail="true" life="10000" /> 
+                <p:fieldset legend="Estimaciones" toggleable="true">
+                    <div class="div_solicitud">
+                        <h:form id="form_solicitud" >
+                            <h:panelGrid columns="4" cellspacing="5" cellpadding="5">
+                                <p:outputLabel value="Códido de la solicitud" />
+                                <p:inputText id="codSolicitud" value="#{beanAbrirEstimacion.codigoSolicitud}" required="true" requiredMessage="Ingrese el código de la solicitud"
+                                             validatorMessage="Ingrese un código de solicitud valido" />
+                                <p:message for="codSolicitud" display="icon"/>
+                                <p:commandButton value="Buscar" update=":form_tabla_solicitudes, :growl"
+                                                 actionListener="#{beanAbrirEstimacion.buscarEstimaciones()}" />
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                    <p:separator style="margin-top: 25px; width: 80%; " />
+                    <div style="width: 75%;margin-left: auto;margin-right: auto; padding-top: 16px;">
+                        <h:form id="form_tabla_solicitudes">
+                            <p:dataTable id="tabla_solicitudes" value="#{beanAbrirEstimacion.lista_estimaciones}" var="estimacion" emptyMessage="No hay registros"
+                                         paginator="true" rows="5" paginatorPosition="bottom" rowsPerPageTemplate="5,10" draggableColumns="true"
+                                          rowKey="#{estimacion.idEstimacion}" selection="#{beanAbrirEstimacion.solSeleccionada}">
+                                <f:facet name="header">
+                                    <h:outputLabel value="Estimaciones"/>
+                                </f:facet>
+                                <p:column selectionMode="single" style="width:2%" /> 
+                                <p:column headerText="Código estimación" sortBy="#{estimacion.idEstimacion}" style="text-align: center;">
+                                    <h:outputText value="#{estimacion.idEstimacion}"/>
+                                </p:column>
+
+                                <p:column headerText="Fecha de creación" sortBy="#{estimacion.fechaCreacion}">                                 
+                                    <h:outputText value="#{estimacion.fechaCreacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>  
+                                </p:column>
+
+                                <p:column headerText="Fecha de cierre" sortBy="#{estimacion.fechaAprobacion}">
+                                    <h:outputText value="#{estimacion.fechaAprobacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>  
+                                </p:column>
+                                <p:column headerText="Usuario estima" sortBy="#{estimacion.sweUsuariosByIdUsu_estima.nombre}">
+                                    <h:outputText value="#{estimacion.sweUsuariosByIdUsu_estima.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Usuario cierra" sortBy="#{estimacion.sweUsuariosByIdUsu_estima.nombre}">
+                                    <h:outputText value="#{estimacion.sweUsuariosByIdUsu_estima.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Horas estimadas" sortBy="#{estimacion.he}" style="text-align: right;" >
+                                    <h:outputText value="#{estimacion.he}" />
+                                </p:column>
+                                <p:column headerText="Estado" sortBy="#{estimacion.sweCataByIdEstado.nombre}">
+                                    <h:outputText value="#{estimacion.sweCataByIdEstado.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Aprobada" sortBy="#{estimacion.aprobada eq 'N' ? 'No' : 'Si'}" style="text-align: center;">                                    
+                                    <h:outputText value="#{estimacion.aprobada eq 'N' ? 'No' : 'Si'}"/>
+                                </p:column>
+                            </p:dataTable>
+                            
+                            <p:commandButton value="Abrir estimación" disabled="#{beanAbrirEstimacion.solSeleccionada!=null or beanAbrirEstimacion.lista_estimaciones==null or beanAbrirEstimacion.lista_estimaciones.size()==0}"
+                                             oncomplete="dialog_abrir_estimacion.show();" style="margin-left: 792px; padding-top: 2px; margin-top: 5px;" />
+                        </h:form>
+                    </div>
+                </p:fieldset>
+                
+                 <h:form id="form_abrir">
+                    <p:confirmDialog id ="dialog_abrir_estimacion" header="Abrir estimación" closable="false"
+                                     severity="alert" showEffect="fade" hideEffect="explode" style="height: 155px !important;"
+                                     message="¿Realmente desea abrir la estimación?" widgetVar="dialog_abrir_estimacion">                         
+                        <p style="text-align: right; height: 50px;padding-top: 0px; margin-top: 0px;">
+                            <p:commandButton id="btn_confirmar_abrir" styleClass="ui-confirmdialog-yes" actionListener="#{beanAbrirEstimacion.abrirEstimacion()}"
+                                             icon="ui-icon-check" oncomplete="dialog_abrir_estimacion.hide()" value="Si"
+                                             update=":form_tabla_solicitudes, :growl" />
+                            <p:commandButton id="btn_cancelar_abrir" styleClass="ui-confirmdialog-no" icon="ui-icon-close"
+                                             oncomplete="dialog_abrir_estimacion.hide()" value="No"/>
+                        </p> 
+                    </p:confirmDialog> 
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

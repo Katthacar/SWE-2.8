@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/09/2013 08:04:35 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweTcompXComp" schema="SWEAMERIKA" table="SWE_TCOMP_X_COMP">
+    <id name="idTcomxcomp" type="int">
+      <column name="ID_TCOMXCOMP" precision="6" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_TCOMP_X_COMP</param>
+      </generator>
+    </id>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdTpocomplejidad">
+      <column name="ID_TPOCOMPLEJIDAD" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdTpocomponente">
+      <column name="ID_TPOCOMPONENTE" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+    <property name="peso" type="int">
+      <column name="PESO" not-null="true" precision="2" scale="0"/>
+    </property>
+    <property name="vigenciaInicial" type="date">
+      <column length="7" name="VIGENCIA_INICIAL" not-null="true"/>
+    </property>
+    <property name="vigenciaFinal" type="date">
+      <column length="7" name="VIGENCIA_FINAL"/>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Aplicación x factor técnico</ui:define>
+            <ui:define name="content"> 
+                <p:growl id="msgs" showDetail="true" /> 
+                <!-- TIPO DE APLICACIÓN POR FACTOR TÉCNICO -->
+
+                <p:fieldset legend="Factor técnico por aplicación" style="width: 80%; margin-left: auto; margin-right: auto;">
+                    <h:form id="form_tApliXFacTec" >
+                        <h:panelGrid columns="1" cellspacing="5" style="width: 82%; padding-left: 172px;" >
+                            <h:outputText value="Tipo de Aplicación: "/>
+                            <p:selectOneMenu value="#{beanTipoApliXFtec.id_TpApSeleccionada}" >
+                                <f:selectItem itemLabel="Seleccione tipo" itemValue="0"/>
+                                <f:selectItems value="#{beanTipoApliXFtec.list_aplicaciones}" var="aplicacion" itemDescription="#{aplicacion.descripcion}" 
+                                               itemLabel="#{aplicacion.nombre}" itemValue="#{aplicacion.idCatalogo}"/>
+                                <p:ajax event="change" update="table_tApliXFacTec" listener="#{beanTipoApliXFtec.ajax_AplSeleccionada()}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <p:contextMenu for="table_tApliXFacTec">  
+                            <p:menuitem value="Editar" update=":Editar_tApliXFacTec:dlgCrear_tApliXFacTec" icon="ui-icon-pencil" actionListener="#{beanTipoApliXFtec.btn_iniciarModificacion}"
+                                        oncomplete="dialog_editar.show()"/> 
+                        </p:contextMenu>   
+                        <p:dataTable id="table_tApliXFacTec" sortMode="multiple" rowKey="#{tipoApliXFacTec.id}" selection="#{beanTipoApliXFtec.sweTipoApliXFtec_selected}" selectionMode="single"
+                                     var="tipoApliXFacTec" rows="10" rowsPerPageTemplate="5,10,15,20" paginator="true" paginatorPosition="bottom" style="width: 65%;margin-left: auto;margin-right: auto;padding-top: 20px;padding-bottom: 20px;"
+                                     value="#{beanTipoApliXFtec.list_DataTable}" widgetVar="Tabla_tApliXFacTec" emptyMessage="No hay registros" >  
+
+                            <f:facet name="header"> 
+                                <p:commandButton id="btnAgre" value="Agregar nuevo" icon="ui-icon-plus" oncomplete="dialog.show()" disabled="#{beanTipoApliXFtec.id_TpApSeleccionada == 0}"
+                                                 update=":Crear_tApliXFacTec:dlgCrear_tApliXFacTec" actionListener="#{beanTipoApliXFtec.inicializar}"/>
+                            </f:facet> 
+                            <p:column headerText="Factor Técnico" style="width:40%" styleClass="columna_texto" sortBy="#{tipoApliXFacTec.sweCataByCodigoFacttecnico.nombre}">  
+                                <h:outputText value="#{tipoApliXFacTec.sweCataByCodigoFacttecnico.nombre}" />  
+                            </p:column> 
+                            <p:column headerText="Grado de Influencia" style="width:20%" styleClass="columna_numero" sortBy="#{tipoApliXFacTec.gradoInfluencia}">  
+                                <h:outputText value="#{tipoApliXFacTec.gradoInfluencia}"/>                                       
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:fieldset>
+                <h:form id="Crear_tApliXFacTec">
+                    <p:dialog header="Factor de Calibración" widgetVar="dialog" resizable="false" id="dlgCrear_tApliXFacTec"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+                        <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">  
+                            <h:outputLabel for="tipoAplicacion" value="Tipo de Aplicación: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="tipoAplicacion" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.sweCataByCodigoTpoaplicacion.idCatalogo}" disabled="true"
+                                             required="true" requiredMessage="Seleccione un tipo de aplicación" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione aplicación" itemValue="-1" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.tipo_aplicaciones}" var="apli" itemDescription="#{apli.descripcion}" itemLabel="#{apli.nombre}" itemValue="#{apli.idCatalogo}"/>                               
+                            </p:selectOneMenu> 
+
+                            <h:outputLabel for="factorTecnico" value="Factor Técnico" style="font-weight:bold"/> 
+                            <p:selectOneMenu id="factorTecnico" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.sweCataByCodigoFacttecnico.idCatalogo}" required="true"  
+                                             requiredMessage="Seleccione un factor técnico" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione factor técnico" itemValue="" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.factores_tecnicos}" var="fac" itemDescription="#{fac.descripcion}"  itemLabel="#{fac.nombre}" itemValue="#{fac.idCatalogo}"/>                               
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="gradoInfluencia" value="Influencia" style="font-weight:bold"/> 
+                            <p:selectOneMenu id="gradoInfluencia" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.gradoInfluencia}" required="true" 
+                                             requiredMessage="Seleccione un grado de influencia" style="width:96%"> 
+                                <f:selectItem itemLabel="Seleccione influencia" itemValue="" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.influencias}"/>                               
+                            </p:selectOneMenu>                             
+
+                            <f:facet name="footer">
+                                <p:separator />
+                                <div style="padding-left: 110px;">
+                                    <p:commandButton id="BtnGuardarFcalibracion" update=":form_tApliXFacTec:table_tApliXFacTec, :msgs" actionListener="#{beanTipoApliXFtec.guardar}" icon="ui-icon-disk" title="Guardar" value="Guardar"  />  
+                                    <p:commandButton id="BtnCancelarFcalibracion"  oncomplete="dialog.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>                                      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+
+                <h:form id="Editar_tApliXFacTec">
+                    <p:dialog header="Factor de Calibración" widgetVar="dialog_editar" resizable="false" id="dlgCrear_tApliXFacTec"  
+                              showEffect="fade" hideEffect="explode" modal="true">  
+                        <h:panelGrid id="display2" columns="2" cellpadding="4" style="margin:0 auto;"> 
+                            
+                            <h:outputLabel for="tipoAplicacion_editar" value="Tipo de Aplicación: " style="font-weight:bold"/> 
+                            <p:selectOneMenu id="tipoAplicacion_editar" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.sweCataByCodigoTpoaplicacion.idCatalogo}"
+                                             required="true" disabled="true" style="width:96%; font-weight:bold" requiredMessage="Seleccione un tipo de aplicación" > 
+                                <f:selectItem itemLabel="Seleccione aplicación" itemValue="-1" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.tipo_aplicaciones}" var="apli" itemLabel="#{apli.nombre}" itemValue="#{apli.idCatalogo}"/>                               
+                            </p:selectOneMenu> 
+
+                            <h:outputLabel for="factorTecnico_editar" value="Factor Técnico" style="font-weight:bold"/> 
+                            <p:selectOneMenu id="factorTecnico_editar" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.sweCataByCodigoFacttecnico.idCatalogo}"
+                                             required="true" disabled="true" requiredMessage="Seleccione un factor técnico" style="width:96%; font-weight:bold"> 
+                                <f:selectItem itemLabel="Seleccione factor técnico" itemValue="-1" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.factores_tecnicos}" var="fac" itemLabel="#{fac.nombre}" itemValue="#{fac.idCatalogo}"/>                               
+                            </p:selectOneMenu>  
+
+                            <h:outputLabel for="gradoInfluencia_editar" value="Influencia" style="font-weight:bold"/> 
+                            <p:selectOneMenu id="gradoInfluencia_editar" value="#{beanTipoApliXFtec.nuevo_SweTipoApliXFtec.gradoInfluencia}"
+                                             required="true" requiredMessage="Seleccione un grado de influencia" style="width:96%; font-weight:bold"> 
+                                <f:selectItem itemLabel="Seleccione influencia" itemValue="-1" />  
+                                <f:selectItems value="#{beanTipoApliXFtec.influencias}"/>                               
+                            </p:selectOneMenu>                             
+
+                            <f:facet name="footer">
+                                <p:separator />
+                                <div style="padding-left: 110px;">
+                                    <p:commandButton id="BtnEditarrFcalibracion" update=":form_tApliXFacTec:table_tApliXFacTec, :msgs" actionListener="#{beanTipoApliXFtec.modificar}" icon="ui-icon-pencil" title="Actualizar" value="Actualizar"/>  
+                                    <p:commandButton id="BtnCancelar_Editar_Fcalibracion"  oncomplete="dialog_editar.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                </div>
+                            </f:facet>
+                        </h:panelGrid> 
+                    </p:dialog>  
+                </h:form> 
+            </ui:define>           
+        </ui:composition>
+    </body>
+</html>

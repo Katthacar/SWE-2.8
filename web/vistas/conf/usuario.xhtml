@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml"> 
+            <ui:define name="title">Confuración de usuario</ui:define>
+            <ui:define name="content">
+                <style type="text/css">
+                    .column1{width: 60%;}
+                    .column2{width: 40%; }
+                </style>
+                <p:growl id="msgs" showDetail="true" />  
+                <h:form id="form_datos">
+                    <p:fieldset id="datos_personales" legend="Datos personales" style="width: 60%;margin-left: auto;margin-right: auto;">
+                        <h:panelGrid columns="2" cellspacing="5"  cellpadding="5" columnClasses="column1, column2" 
+                                     style="margin-left: auto;margin-right: auto;width: 50%;">
+                            <h:outputLabel value="Código:"/>
+                            <p:inputText value="#{beanUsuario.usuarioAutentico.codigo}" disabled="true" />
+                            
+                            <h:outputLabel value="Nombre:" />
+                            <p:inputText id="nombre" value="#{beanUsuario.usuarioAutentico.nombre}" maxlength="50" required="true" requiredMessage="Por favor ingrese su nombre"/>
+                            
+                            <h:outputLabel value="Teléfono:" />
+                            <p:inputText value="#{beanUsuario.usuarioAutentico.telefono}" maxlength="10" />
+                            
+                            <h:outputLabel value="email:" />
+                            <p:inputText value="#{beanUsuario.usuarioAutentico.email}"  disabled="true"/>
+                           
+                            <p:commandLink oncomplete="dialog_pass.show();return false;" update=":form_pass:dialog1" ><h:outputText value="Cambiar contraseña"/></p:commandLink>
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar cambios" actionListener="#{beanUsuario.guardarCambios()}" update=":msgs, :form_datos"
+                                         style="margin-left: 424px;font-size: 11px;" />   
+                    </p:fieldset>
+                </h:form>
+                <h:form id="form_pass">
+                    <p:dialog id="dialog1" widgetVar="dialog_pass" header="Cambiar contraseña"  modal="true"
+                              resizable="false" style="width: 35% !important;">
+                        <h:panelGrid columns="2" cellspacing="5"  cellpadding="5" columnClasses="column1, column2"
+                                     style="margin-left: auto;margin-right: auto;width: 76%;">
+                            <h:outputLabel value="Contraseña actual:"  />
+                            <p:password value="#{beanUsuario.contrasena_anterior}" maxlength="20" 
+                                        required="true" requiredMessage="Ingrese la contraseña actual" /> 
+                            <h:outputLabel value="Nueva contraseña:" />
+                            <p:password  id="contrasena1" value="#{beanUsuario.contrasena_nueva1}" maxlength="20"
+                                         required="true" requiredMessage="Ingrese la nueva contraseña"/>
+                            <h:outputLabel value="Confirmar nueva contraseña:" />
+                            <p:password  id="contrasena2" value="#{beanUsuario.contrasena_nueva2}" maxlength="20"
+                                         required="true" requiredMessage="Confirme la nueva contraseña"/>
+                        </h:panelGrid>
+                        <p:separator style="width: 89%;margin-right: 24px;"/>
+                        <p:commandButton value="Cambiar contraseña" actionListener="#{beanUsuario.cambiarContrasena()}" update=":msgs"
+                                         style="margin-left: 242px;font-size: 11px;" />   
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

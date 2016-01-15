@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/10/2013 09:22:23 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweSoli" schema="SWEAMERIKA" table="SWE_SOLI">
+    <id name="idEstimacion" type="int">
+      <column name="ID_ESTIMACION" precision="9" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_ESTIMACION</param>
+      </generator>
+    </id>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdEstado">
+      <column name="ID_ESTADO" not-null="true" precision="6" scale="0">
+        <comment>Representa el estado de la estimación, este valor es traido de Swe_Cata</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdAplicacion">
+      <column name="ID_APLICACION" not-null="true" precision="6" scale="0">
+        <comment>Representa el tipo de aplicación, Tomado de Swe_Cata</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdTposolicitud">
+      <column name="ID_TPOSOLICITUD" not-null="true" precision="6" scale="0">
+        <comment>Representa el tipo de solicitud, Tabla Swe_Cata</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdLenguaje">
+      <column name="ID_LENGUAJE" not-null="true" precision="6" scale="0">
+        <comment>Representa el lenguaje seleccionado, Tabla Swe_Cata</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" name="sweCataByIdPerfil">
+      <column name="ID_PERFIL" not-null="true" precision="6" scale="0">
+        <comment>Representa el perfil seleccionado, Tabla Swe_Cata</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweUsuarios" fetch="select" name="sweUsuariosByIdUsu_estima">
+      <column name="USU_ESTIMA" not-null="true" precision="15">
+        <comment>Usuario que realiza la estimación</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweUsuarios" fetch="select" name="sweUsuariosByIdUsu_cierra">
+      <column name="USU_CIERRA" precision="15">
+        <comment>Usuario que cierra la estimación</comment>
+      </column>
+    </many-to-one>
+    <property name="numSolicitud" type="int">
+      <column name="NUM_SOLICITUD" not-null="true" precision="7" scale="0">
+        <comment>Representa el número de la solicitud, traido de SOLICITUD_OBRAS</comment>
+      </column>
+    </property>    
+    <property name="fechaModificacion" type="timestamp" >
+      <column length="7" name="FECHA_MODIFICACION">
+        <comment>Fecha de creación y/o modificación de la estimación</comment>
+      </column>
+    </property>
+    <property name="fechaAprobacion" type="timestamp">
+      <column length="7" name="FECHA_APROBACION">
+        <comment>Fecha en que fue cerrada la estimación</comment>
+      </column>
+    </property>
+    <property name="upf" type="big_decimal">
+      <column name="UPF" not-null="true" precision="6"/>
+    </property>
+    <property name="vaf" type="big_decimal">
+      <column name="VAF" not-null="true" precision="6"/>
+    </property>
+    <property name="apf" type="big_decimal">
+      <column name="APF" not-null="true" precision="6"/>
+    </property>
+    <property name="fce" type="big_decimal">
+      <column name="FCE" not-null="true" precision="6"/>
+    </property>
+    <property name="fcr" type="big_decimal">
+      <column name="FCR" precision="6"/>
+    </property>
+    <property name="he" type="big_decimal">
+      <column name="HE" not-null="true" precision="6">
+        <comment>Representa las horas estimadas con puntos de función</comment>
+      </column>
+    </property>
+    <property name="hr" type="big_decimal">
+      <column name="HR" precision="6">
+        <comment>Representa las horas reales de la solicitud reportadas en la tabla MOVIMIENTOS_INV</comment>
+      </column>
+    </property>
+    <property name="ct" type="int">
+      <column name="CT" not-null="true" precision="3" scale="0">
+        <comment>Representa el total de la influencia de los factores técnicos asociados a la solicitud</comment>
+      </column>
+    </property>
+    <property name="tpf" type="big_decimal">
+      <column name="TPF" not-null="true" precision="6">
+        <comment>Total puntos de función</comment>
+      </column>
+    </property>
+    <property name="hepf" type="big_decimal">
+      <column name="HEPF" not-null="true" precision="6">
+        <comment>Horas estimadas puntos de función. Son las horas del perfil asociado con el lenguaje, esto es de la tabla DEFPERF_ASOCIAHR_XLENG</comment>
+      </column>
+    </property>
+    <property name="hrpf" type="big_decimal">
+      <column name="HRPF" precision="6"/>
+    </property>
+    <property name="hrje" type="big_decimal">
+      <column name="HRJE" precision="6">
+        <comment>Horas reales a jucio del experto</comment>
+      </column>
+    </property>
+    <property name="fa" type="big_decimal">
+      <column name="FA" not-null="true" precision="6">
+        <comment>Representa la sumatoria de las influencias de los factores ambientales</comment>
+      </column>
+    </property>
+    <property name="fechaCreacion" type="timestamp">
+      <column length="7" name="FECHA_CREACION">
+        <comment>Fecha de creación de la estimación</comment>
+      </column>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="1000" name="DESCRIPCION">
+        <comment>Una descripción de la solicitud, sive para detallar el alcace de la solicitud</comment>
+      </column>
+    </property>
+    <property name="aprobada" type="string">
+      <column length="1" name="APROBADA">
+        <comment>Este campo indica si la estimación es valida para hacer la homologación de las horas. Si =>'S' de lo contrario No=>'N'</comment>
+      </column>
+    </property>
+    <set inverse="true" name="sweFtecnXsols">
+      <key>
+        <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweFtecnXsol"/>
+    </set>
+    <set inverse="true" name="sweFactAmbiXsols">
+      <key>
+        <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweFactAmbiXsol"/>
+    </set>
+    <set inverse="true" name="sweCompXsolis">
+      <key>
+        <column name="SOLICITUD_ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCompXsoli"/>
+    </set>
+    <set inverse="true" name="sweEtapaXsols" order-by="CODIGO_ETAPA">
+      <key>
+        <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweEtapaXsol"/>
+    </set>
+    <set inverse="true" name="swePronosticos">
+      <key>
+        <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SwePronostico"/>
+    </set>
+  </class>
+</hibernate-mapping>

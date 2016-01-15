@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweCompXPfuncion" schema="SWEAMERIKA" table="SWE_COMP_X_PFUNCION">
+    <composite-id class="com.amerika.swe.model.SweCompXPfuncionId" name="id">
+      <key-property name="idDet" type="int">
+        <column name="ID_DET" precision="3" scale="0"/>
+      </key-property>
+      <key-property name="idRetftr" type="int">
+        <column name="ID_RETFTR" precision="3" scale="0"/>
+      </key-property>
+      <key-property name="idCatcomplejidad" type="int">
+        <column name="ID_CATCOMPLEJIDAD" precision="6" scale="0"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="com.amerika.swe.model.SweCataDetret" fetch="select" insert="false" name="sweCataDetretByIdRetftr" update="false">
+      <column name="ID_RETFTR" not-null="true" precision="3" scale="0"/>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCataDetret" fetch="select" insert="false" name="sweCataDetretByIdDet" update="false">
+      <column name="ID_DET" not-null="true" precision="3" scale="0"/>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" insert="false" name="sweCata" update="false">
+      <column name="ID_CATCOMPLEJIDAD" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SwePronostico" schema="SWEAMERIKA" table="SWE_PRONOSTICO">
+        <id name="idPronostico" type="int">
+            <column name="ID_PRONOSTICO" precision="6" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_SWE_IDPRONOSTICO</param>
+            </generator>
+        </id>
+        <many-to-one class="com.amerika.swe.model.SweSoli" fetch="select" name="sweSoli">
+            <column name="ID_ESTIMACION" not-null="true" precision="9" scale="0">
+                <comment>Llave foránea que apunta a la tabla SWE_SOLI.CODIGO</comment>
+            </column>
+        </many-to-one>
+        <property name="hrPronostico" type="big_decimal">
+            <column name="HR_PRONOSTICO" not-null="true" precision="6" scale="2">
+                <comment>Horas pronosticadas para la estimación con base en los puntos de función ajustados y las horas asociadas a un intervalo en SWE_INTERVALO_HR</comment>
+            </column>
+        </property>
+        <property name="error" type="big_decimal">
+            <column name="ERROR" not-null="true" precision="6" scale="2">
+                <comment>Representa el error de pronóstico, es igual a las horas reales reportadas en la estimación menos las horas pronosticadas.</comment>
+            </column>
+        </property>
+        <property name="errorCuadratico" type="big_decimal">
+            <column name="ERROR_CUADRADO" not-null="true" precision="6" scale="2">
+                <comment>Representa el error de pronóstico al cuadrado.</comment>
+            </column>
+        </property>
+    </class>  
+</hibernate-mapping>

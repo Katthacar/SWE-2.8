@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Generar reporte</ui:define>
+            <ui:define name="content">
+                <style type="text/css">
+                    .tablaTipoSoli tr, .tablaTipoSoli td{
+                        white-space: normal !important;
+                        font-size: 11px; 
+                        height: 10px;
+                    }
+                    .column_numero_estimaciones{width: 10%; text-align:right}
+                    .column_tipo_solicitud{width: 50%;}
+                    .column_horas_estimadas, .column_horas_reales, .column_distribucion, .column_HR, .column_HE{width: 10%; white-space: normal !important; text-align:right}                   
+                    .column_etapa{width: 60%;}
+                </style>
+                <p:growl id="mensaje" showDetail="true"  />
+                <div >
+                    <h:form id="form_fechas" style="width: 30%; float: left;">
+                        <p:fieldset legend="Rango de fechas" style="width: 80%;" >
+                            <h:panelGrid columns="2" cellpadding="5" >
+                                <p:outputLabel for="fechaInicial"  value="Fecha inicial: "/>
+                                <p:calendar id="fechaInicial" title="Fecha inicial"  value="#{beanReportes.fechaInicial}" navigator="true" required="true"
+                                            maxdate="#{beanReportes.FECHA_ACTUAL}" pattern="dd/MM/yyyy"
+                                            requiredMessage="Por favor ingrese la fecha inicial" converterMessage="Digite la fecha en el formato dd/mm/aaaa">
+                                    <p:ajax event="dateSelect" update="fechaFinal"/> 
+                                </p:calendar>
+                                <p:outputLabel for="fechaFinal"  value="Fecha final: "/>
+                                <p:calendar id="fechaFinal" title="Fecha final" value="#{beanReportes.fechaFinal}" required="true"
+                                            disabled="#{beanReportes.fechaInicial==null}" navigator="true"
+                                            mindate="#{beanReportes.fechaInicial}" maxdate="#{beanReportes.FECHA_ACTUAL}" pattern="dd/MM/yyyy" 
+                                            requiredMessage="Por favor ingrese la fecha final" converterMessage="Digite la fecha en el formato dd/mm/aaaa">
+                                    <p:ajax event="dateSelect" update="form_fechas" />
+                                </p:calendar>                                    
+
+                            </h:panelGrid>
+                            <div style="padding-top: 15px; padding-left: 7px; padding-right: 8px;">
+                                <p:commandButton value="Consultar" style="width: 100%;"
+                                                 actionListener="#{beanReportes.bnt_hrSolCerradas()}" update=":form_datos:tabla_maestro, :mensaje"/>
+                            </div>
+                            <div style="padding-top: 5px; padding-left: 7px; padding-right: 8px;">
+                                <p:commandButton value="Actualizar horas"  style="width: 100%;" icon="sql"
+                                                 actionListener="#{beanReportes.actualizarHorasSWE()}" update=":mensaje" />
+                            </div>                            
+                        </p:fieldset>
+                    </h:form >
+                    <h:form id="form_datos" style="float: right; width: 70%;">
+                        <p:fieldset legend="Datos" >
+                            <p:dataTable id="tabla_maestro" value="#{beanReportes.list_exportar}" var="horasTipoSoli"  
+                                         selectionMode="single" selection="#{beanReportes.seleccion_TipoSol}"  rowIndexVar="row" 
+                                         rowKey="#{horasTipoSoli.idTipoSolicitud}" emptyMessage="No hay datos" style="padding-bottom: 20px;">
+                                <p:ajax event="rowSelect" update=":form_datos:table_detalle" />  
+                                <p:column headerText="Estimaciones" styleClass="column_numero_estimaciones" >
+                                    #{horasTipoSoli.numEstimaciones}
+                                </p:column>
+                                <p:column headerText="Tipo de solicitud" styleClass="column_tipo_solicitud">
+                                    #{horasTipoSoli.tipoSolicitud}
+                                </p:column>
+                                <p:column headerText="Horas estimadas" styleClass="column_horas_estimadas" >
+                                    #{horasTipoSoli.hr_estimadas}
+                                </p:column>
+                                <p:column headerText="Horas reales" styleClass="column_horas_reales" >
+                                    #{horasTipoSoli.hr_reales}
+                                </p:column>
+                                <p:column headerText="Promedio calibración estimado"  styleClass="column_distribucion" >
+                                    #{horasTipoSoli.pr_fce}
+                                </p:column>  
+                                <p:column headerText="Promedio calibración real" styleClass="column_distribucion" >
+                                    #{horasTipoSoli.pr_fcr}
+                                </p:column>  
+                            </p:dataTable>
+
+                            <p:dataTable id="table_detalle" value="#{beanReportes.seleccion_TipoSol.subReportHrEtapas}" var="hrEtapas"
+                                         emptyMessage="No hay datos" >
+                                <p:column headerText="Etapa" styleClass="column_etapa" >
+                                    #{hrEtapas.etapa}
+                                </p:column>
+                                <p:column headerText="Horas estimadas" styleClass="column_HR" >
+                                    #{hrEtapas.hr_estimadas}
+                                </p:column>
+                                <p:column headerText="Horas reales" styleClass="column_HE" >
+                                    #{hrEtapas.hr_reales}
+                                </p:column>
+                                <p:column headerText="Distribución porcentual horas estimadas" styleClass="column_distribucion" >
+                                    #{hrEtapas.porcDistrHE}
+                                </p:column>  
+                                <p:column headerText="Distribución porcentual horas reales" styleClass="column_distribucion" >
+                                    #{hrEtapas.porcDistrHR} 
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:fieldset>
+                        <h:commandLink actionListener="#{beanReportes.procesarPDF()}" target="_blank">  
+                            <div style="width: 100%;">
+                                <p:graphicImage id="image" value="../../resources/images/pdf.png" style="padding-left: 853px; padding-top: 10px;"/>                                                                                 
+                            </div>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </ui:define> 
+        </ui:composition>
+    </body>
+</html>

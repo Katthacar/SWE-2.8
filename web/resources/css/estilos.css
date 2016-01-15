@@ -1,0 +1,56 @@
+div{
+    display: block;
+}
+.tabladatos{
+    font-size: 10px; 
+    width: auto;    
+}
+.tablaDatos td {     
+    white-space: normal !important;
+    font-size: 11px; 
+    height: 10px;
+} 
+.columna_texto{
+    text-align: left;    
+}
+.columna_boolean, .columna_fecha, .columna_codigo{
+    text-align: center; 
+}
+.columna_numero{
+    text-align: right;    
+}
+.pbutton{
+    text-align: right;
+}
+.columna_sinCabecera{
+    width: 15%;
+}
+.celdas_totales{
+    background-color: rgb(141,180,226);
+}
+
+/*----------------------REGLA PARA LOS SEPARADORES----------------------------*/
+hr{border: 1px solid #a6c9e2 !important;}
+
+/*--------------------REAGLAS QUE APLICAN A LOS ICONOS------------------------*/
+.home{background: url(../images/iconos/home1.png) no-repeat !important;padding-right: 4px;}
+.reporte{background: url(../images/iconos/pdf.png) no-repeat !important;padding-right: 4px;}
+.new-estimacion{background: url(../images/iconos/new-estimacion.png) no-repeat !important;padding-right: 4px;}
+.salir{background: url(../images/iconos/exit.png) no-repeat !important;padding-right: 4px;}
+.ui-icon-plus{background: url(../images/iconos/plus.png) no-repeat !important;}
+.ui-icon-disk{background: url(../images/iconos/save.png) no-repeat !important;}
+.ui-icon-cancel, .ui-icon-close{background: url(../images/iconos/cancel.png) no-repeat !important;}
+.ui-icon-pencil{background: url(../images/iconos/edit.png) no-repeat !important;}
+.ui-icon-trash{background: url(../images/iconos/trash.png) no-repeat !important;}
+.ui-icon-check{background: url(../images/iconos/ok.png) no-repeat !important;}
+.ui-confirm-dialog-severity{background: url(../images/iconos/warn.png) no-repeat !important;}
+.ui-icon-circle-triangle-e{background: url(../images/iconos/history.png) no-repeat !important;}
+.ui-icon-circle-triangle-s{background: url(../images/iconos/down.png) no-repeat !important;}
+.ui-icon-search{background: url(../images/iconos/search.png) no-repeat !important;padding-right: 5px;}
+.sql{background: url(../images/iconos/sql.png) no-repeat !important;padding-right: 4px;}
+.folder{background: url(../images/iconos/folder.png) no-repeat !important;padding-right: 4px;}
+.admin{background: url(../images/iconos/admin.png) no-repeat !important;padding-right: 4px;}
+.guardar-estimacion{background: url(../images/iconos/disk.png) no-repeat !important; width: 32px !important; height: 32px !important;}
+.calculator{background: url(../images/iconos/calculator.png) no-repeat !important; width: 32px !important; height: 32px !important;}
+.cerrar-estimacion{background: url(../images/iconos/cerrar.png) no-repeat !important; width: 32px !important; height: 32px !important;}
+.ui-icon .ui-icon-alert .ui-confirm-dialog-severity{background: url(../images/iconos/error.png) no-repeat !important;}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweTipoDetret" schema="SWEAMERIKA" table="SWE_TIPO_DETRET">
+    <id name="codigoTipoDetret" type="int">
+      <column name="CODIGO_TIPO_DETRET" precision="2" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_SWE_TIPO_DETRET</param>
+      </generator>
+    </id>
+    <property name="nombre" type="string">
+      <column length="45" name="NOMBRE" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="100" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <set inverse="true" name="sweCataDetrets">
+      <key>
+        <column name="CODIGO_TIPO_DETRET" not-null="true" precision="2" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCataDetret"/>
+    </set>
+  </class>
+</hibernate-mapping>

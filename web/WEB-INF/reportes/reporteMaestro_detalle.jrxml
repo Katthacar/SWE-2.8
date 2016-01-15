@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteMaestro_detalle" language="groovy" pageWidth="453" pageHeight="842" columnWidth="453" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fd30a843-78af-4810-97de-821d8da7f1ce">
+	<property name="ireport.zoom" value="1.771561000000011"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idTipoSolicitud" class="java.math.BigDecimal"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="THE" class="java.math.BigDecimal"/>
+	<parameter name="THR" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT CA.ID_CATALOGO ID_ETAPA, CA.NOMBRE ETAPA, SUM(ET.HORAS_ESTIMADAS) HE, SUM(ET.HORAS_REALES) HR
+FROM ((SWE_ETAPA_XSOL ET INNER JOIN SWE_CATA CA ON ET.CODIGO_ETAPA = CA.ID_CATALOGO)
+      INNER JOIN SWE_SOLI SOL ON SOL.ID_ESTIMACION = ET.ID_ESTIMACION)
+WHERE SOL.ID_ESTADO = (SELECT ESTADO.ID_CATALOGO FROM SWE_CATA ESTADO WHERE ESTADO.NOMBRE = 'Cerrado')
+      AND SOL.ID_TPOSOLICITUD = $P{idTipoSolicitud} AND
+      SOL.FECHA_APROBACION  BETWEEN ($P{fechaInicial}-1) AND ($P{fechaFinal}+1)
+GROUP BY(CA.ID_CATALOGO, CA.NOMBRE)
+ORDER BY CA.ID_CATALOGO ASC]]>
+	</queryString>
+	<field name="ID_ETAPA" class="java.math.BigDecimal"/>
+	<field name="ETAPA" class="java.lang.String"/>
+	<field name="HE" class="java.math.BigDecimal"/>
+	<field name="HR" class="java.math.BigDecimal"/>
+	<variable name="HE_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{HE}]]></variableExpression>
+	</variable>
+	<variable name="HR_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{HR}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4cbc445e-05d9-4c26-b2d8-ae9d6e7c8c42" x="148" y="0" width="57" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="730f8519-831d-45ff-a470-564df1d83d9a" x="205" y="0" width="52" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HR}!= null ? $F{HR}:"-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5b97596c-adca-45c8-a08e-2a9cc417d718" x="6" y="0" width="142" height="20"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ETAPA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a2db328d-754e-47e2-97ae-7500327945c4" x="257" y="0" width="53" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HE}!=null && $P{THE}.compareTo(java.math.BigDecimal.valueOf(0))>0 ? $F{HE}.divide($P{THE}, 2, java.math.RoundingMode.HALF_DOWN).multiply( java.math.BigDecimal.valueOf(100)) : "-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="88104227-8eb6-4b58-b6bd-a8237c870ae1" x="310" y="0" width="59" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HR}!= null && $P{THR}.compareTo(java.math.BigDecimal.valueOf(0))>0 ? $F{HR}.divide($P{THR}, 2, java.math.RoundingMode.HALF_DOWN).multiply( java.math.BigDecimal.valueOf(100)):"-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="26" splitType="Stretch">
+			<line>
+				<reportElement uuid="5e53756e-d53a-4b44-a018-092fb7d5ad32" x="6" y="2" width="378" height="1" forecolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="d84910df-aed5-406c-9857-89b80f61c038" x="148" y="5" width="57" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{HE_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2ba215ea-0a8b-44e7-9415-450558157c64" x="205" y="5" width="52" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($V{HR_1}!=null ? $V{HR_1} : "-")]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

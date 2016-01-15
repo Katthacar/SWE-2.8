@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">
+                Administración de usuarios
+            </ui:define>
+
+            <ui:define name="content">
+                <style type="text/css">
+                    .cajas{margin-top: 15px; margin-bottom: 10px; margin-left: auto;margin-right: auto; width: 80%;}
+                </style>
+                <p:fieldset legend="Agregar usuario" toggleable="true" collapsed="true" styleClass="cajas">
+                    <h:form id="form_agegar_usuario">
+                        
+                    </h:form>
+                </p:fieldset>
+                <p:fieldset legend="Modificar usuario" toggleable="true" collapsed="true" styleClass="cajas">
+                    <h:form id="form_modificar_usuario">
+                        
+                    </h:form>
+                </p:fieldset>
+                <p:fieldset legend="Revocar usuario"  toggleable="true" collapsed="true" styleClass="cajas">
+                    <h:form id="form_revocar_usuario">
+                        
+                    </h:form>
+                </p:fieldset>
+                <p:fieldset legend="Agregar Perfil"  toggleable="true" collapsed="true" styleClass="cajas">
+                    <h:form id="form_agegar_perfil">
+                        
+                    </h:form>
+                </p:fieldset>
+                <p:fieldset legend="Editar Perfil" toggleable="true" collapsed="true" styleClass="cajas">
+                    <h:form id="form_editar_perfil">
+                        
+                    </h:form>
+                </p:fieldset>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

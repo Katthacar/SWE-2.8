@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweTipoApliXFtec" schema="SWEAMERIKA" table="SWE_TIPO_APLI_X_FTEC">
+    <composite-id class="com.amerika.swe.model.SweTipoApliXFtecId" name="id">
+      <key-property name="codigoFacttecnico" type="int">
+        <column name="CODIGO_FACTTECNICO" precision="6" scale="0"/>
+      </key-property>
+      <key-property name="codigoTpoaplicacion" type="int">
+        <column name="CODIGO_TPOAPLICACION" precision="6" scale="0"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" insert="false" name="sweCataByCodigoTpoaplicacion" update="false">
+      <column name="CODIGO_TPOAPLICACION" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+    <many-to-one class="com.amerika.swe.model.SweCata" fetch="select" insert="false" name="sweCataByCodigoFacttecnico" update="false">
+      <column name="CODIGO_FACTTECNICO" not-null="true" precision="6" scale="0"/>
+    </many-to-one>
+    <property name="gradoInfluencia" type="int">
+      <column name="GRADO_INFLUENCIA" not-null="true" precision="1" scale="0"/>
+    </property>
+  </class>
+</hibernate-mapping>

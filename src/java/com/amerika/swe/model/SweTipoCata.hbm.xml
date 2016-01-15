@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2013 09:52:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class name="com.amerika.swe.model.SweTipoCata" schema="SWEAMERIKA" table="SWE_TIPO_CATA">
+    <id name="codigoTipo" type="int">
+      <column name="CODIGO_TIPO" precision="5" scale="0"/>
+      <generator class="sequence">
+        <param name="sequence">ID_TIPOCATALOGO</param>
+      </generator>
+    </id>
+    <property name="nombre" type="string">
+      <column length="45" name="NOMBRE" not-null="true"/>
+    </property>
+    <property name="descripcion" type="string">
+      <column length="100" name="DESCRIPCION" not-null="true"/>
+    </property>
+    <property name="mostrarEstado" type="string">
+      <column length="1" name="MOSTRAR_ESTADO" not-null="true"/>
+    </property>
+    <property name="mostrarValor" type="string">
+      <column length="1" name="MOSTRAR_VALOR" not-null="true"/>
+    </property>
+    <property name="estado" type="string">
+      <column length="1" name="ESTADO"/>
+    </property>
+    <set inverse="true" name="sweCatas" where="ESTADO IS NULL OR ESTADO='A'">
+      <key>
+        <column name="CODIGO_TIPO" not-null="true" precision="5" scale="0"/>
+      </key>
+      <one-to-many class="com.amerika.swe.model.SweCata"/>
+    </set>
+  </class>
+</hibernate-mapping>

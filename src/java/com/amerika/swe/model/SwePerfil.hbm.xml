@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2013 01:46:17 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.amerika.swe.model.SwePerfil" table="SWE_PERFIL" schema="SWEAMERIKA">
+        <id name="codigo" type="string">
+            <column name="CODIGO" length="15" />
+            <generator class="assigned" />
+        </id>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="15" not-null="true">
+                <comment>Usuario que crea el perfil</comment>
+            </column>
+        </property>
+        <property name="programa" type="string">
+            <column name="PROGRAMA" length="50" not-null="true">
+                <comment>P&#225;gina o programa desde donde se modifica el perfil</comment>
+            </column>
+        </property>
+        <property name="fechaModif" type="date">
+            <column name="FECHA_MODIF" length="7" not-null="true">
+                <comment>Fecha en que fue modicicado o registrado el perfil</comment>
+            </column>
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="45" not-null="true">
+                <comment>Nombre del perfil</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="45" not-null="true">
+                <comment>Estado del perfil Activo=&gt;'A' Inactivo=&gt;'I'</comment>
+            </column>
+        </property>
+        <property name="fechaAlta" type="date">
+            <column name="FECHA_ALTA" length="7" not-null="true">
+                <comment>Fecha en la que entr&#243; en vigencia el perfil</comment>
+            </column>
+        </property>
+        <property name="fechaBaja" type="date">
+            <column name="FECHA_BAJA" length="7">
+                <comment>Fecha en la que fue dado de baja el perfil</comment>
+            </column>
+        </property>
+        <set name="sweMenuPerfils" inverse="true">
+            <key>
+                <column name="CODIGO_PERFIL" length="15" not-null="true">
+                    <comment>C&#243;digo del perfil tomado de la tabla Perfil.codigo</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweMenuPerfil" />
+        </set>
+        <set name="sweFuncionPerfils" inverse="true">
+            <key>
+                <column name="CODIGO_PERFIL" length="15" not-null="true">
+                    <comment>C&#243;digo del perfil de la tabla Perfil.codigo</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweFuncionPerfil" />
+        </set>
+        <set name="sweUsuarioPerfils" inverse="true">
+            <key>
+                <column name="CODIGO_PERFIL" length="15" not-null="true">
+                    <comment>C&#243;digo del perfil de la tabla Perfil.codigo</comment>
+                </column>
+            </key>
+            <one-to-many class="com.amerika.swe.model.SweUsuarioPerfil" />
+        </set>
+    </class>
+</hibernate-mapping>

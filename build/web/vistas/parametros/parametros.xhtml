@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <body>
+        <ui:composition template="./../template.xhtml">
+            <ui:define name="title">Definición de parámetros</ui:define>
+            <ui:define name="content">
+                <p:fieldset legend="Definición de parámetros" style="width: 80%;margin-left: auto;margin-right: auto;" >
+                    <div style="width: 100%;"> 
+                        <h:form style="margin-left: auto;margin-right: auto; padding-left: 100px; padding-bottom: 15px; padding-top: 15px;"> 
+                            <p:commandButton id="btnCrearParam" update=":Crear_Param" oncomplete="Parametros.show()" label="Agregar parámetro"
+                                             icon="ui-icon-plus" value="Agregar Parámetro" actionListener="#{beanParametros.inicializar}" />                                                       
+                        </h:form> 
+                        <p:growl id="msgs" showDetail="true" /> 
+                        <h:form id="listarParametros" style="width: 80%;margin-left: auto;margin-right: auto;">
+                            <p:dataTable id="ListadoParametros" var="parametro" value="#{beanParametros.parametros}" styleClass="tablaDatos"
+                                         widgetVar="Tabla_Parametros"  paginator="true" rows="5" paginatorPosition="bottom" emptyMessage="No hay registros"
+                                         style="width: 100%;">  
+                                <p:column headerText="Nombre" filterBy="#{parametro.nombre}">  
+                                    <h:outputText value="#{parametro.nombre}" />  
+                                </p:column>  
+                                <p:column headerText="Tipo" >  
+                                    <h:outputText value="#{parametro.tipo}" />  
+                                </p:column>  
+                                <p:column headerText="Valor" >  
+                                    <h:outputText value="#{parametro.valor}" />  
+                                </p:column>  
+                                <p:column headerText="Longitud" >  
+                                    <h:outputText value="#{parametro.longitud}" />  
+                                </p:column>  
+                                <p:column headerText="Descripción">  
+                                    <h:outputText value="#{parametro.descripcion}" />  
+                                </p:column>  
+                                <p:column >                                                    
+                                    <p:commandButton id="BtnModificarParam" update=":ModificarParametro" oncomplete="param.show()"
+                                                     icon="ui-icon-pencil" title="Modificar Parámetro" actionListener="#{beanParametros.btn_iniciarModificacion(parametro)}">  
+                                        <f:setPropertyActionListener value="#{parametro}" target="#{beanParametros.parametro_seleccionado}" />  
+                                    </p:commandButton>  
+                                    <p:commandButton id="BtnEliminarParam" update=":EliminarParametro" oncomplete="DialogEliminarParam.show()" 
+                                                     icon="ui-icon-trash" title="Eliminar Parámetro">  
+                                        <f:setPropertyActionListener value="#{parametro}" target="#{beanParametros.parametro_seleccionado}" />  
+                                    </p:commandButton> 
+                                </p:column>  
+                            </p:dataTable> 
+                        </h:form>                                     
+                        <h:form id="Crear_Param">
+                            <p:dialog header="Crear Parámetro" widgetVar="Parametros" resizable="false" id="dlgCrearParametro"  
+                                      showEffect="fade" hideEffect="explode" modal="true">                              
+                                <h:panelGrid id="display" columns="3" cellpadding="4" style="margin:0 auto;">  
+                                    <h:outputLabel for="CodigoParam" value="Código:" style="font-weight:bold"/>  
+                                    <p:inputText id="CodigoParam" value="#{beanParametros.parametro_nuevo.codigoParam}" 
+                                                 required="true" label="Parametro" size="10" disabled="true" /> 
+                                    <p:message for="CodigoParam" display="icon"/>
+
+                                    <h:outputLabel for="nombreParam" value="Nombre:" style="font-weight:bold"/>  
+                                    <p:inputText id="nombreParam" maxlength="15" requiredMessage="Ingrese el nombre del parámetro"
+                                                 value="#{beanParametros.parametro_nuevo.nombre}" required="true" label="Nombre de parametro" /> 
+                                    <p:message for="nombreParam" display="icon"/>
+
+                                    <h:outputLabel for="TipoParam" value="Tipo:" style="font-weight:bold"/>  
+                                    <p:selectOneMenu id ="TipoParam" value="#{beanParametros.parametro_nuevo.tipo}"  style="width: 167px;"
+                                                     requiredMessage="Seleccione el tipo de parámetro" required="true" >  
+                                        <f:selectItem itemLabel="Tipo de Parámetro" itemValue="" /> 
+                                        <f:selectItem itemLabel="Fija" itemValue="Fija" />                                     
+                                    </p:selectOneMenu>  
+                                    <p:message for="TipoParam" display="icon"/>
+
+                                    <h:outputLabel for="valorParam" value="Valor:" style="font-weight:bold"/>  
+                                    <p:inputText id="valorParam" value="#{beanParametros.parametro_nuevo.valor}" maxlength="7"
+                                                 converterMessage="El campo valor solo permite valores numéricos" requiredMessage="Ingrese el valor del parámetro"
+                                                 required="true" label="Valor del parametro">
+                                        <!--  <f:validateRegex pattern="^[0-9]{1,4}+(\.?[0-9]{1,2})?$"></f:validateRegex> -->
+                                    </p:inputText> 
+                                    <p:message for="valorParam" display="icon"/>
+
+                                    <h:outputLabel for="longitudParam" value="Longitud:" style="font-weight:bold"/>  
+                                    <p:inputText id="longitudParam" value="#{beanParametros.parametro_nuevo.longitud}" maxlength="3"
+                                                 converterMessage="El campo longitud solo permite valores numéricos" label="Longitud del parametro" /> 
+                                    <p:message for="longitudParam" display="icon"/>
+
+                                    <h:outputLabel for="desc" value="Descripción:" style="font-weight: bold"/>  
+                                    <p:inputTextarea id="desc" rows="6" cols="33" maxlength="50" value="#{beanParametros.parametro_nuevo.descripcion}" 
+                                                     requiredMessage="Digite la descripción"  required="true" label="Descripción del tipo de catalogo" validatorMessage="true"/>
+                                    <p:message for="desc" display="icon"/>
+
+                                    <f:facet name="footer">
+                                        <p:separator style="width: 97%; margin-right: 10px;" />
+                                        <div style="padding-left: 158px;">
+                                            <p:commandButton id="BtnGuardarCrearParam" update=":listarParametros:ListadoParametros, :msgs" actionListener="#{beanParametros.BtnCrearParametro}" 
+                                                             oncomplete="if(#{beanParametros.btn}){Parametros.hide()}else{Parametros.show()}" icon="ui-icon-disk" title="Guardar" value="Guardar"/>  
+                                            <p:commandButton id="BtnCancelarCrearParam"  oncomplete="Parametros.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                        </div>
+                                    </f:facet>
+                                </h:panelGrid> 
+                            </p:dialog>  
+                        </h:form>   
+
+                        <br></br>
+                        <h:form id="ModificarParametro">  
+                            <p:dialog header="Modificar Parámetro" widgetVar="param" resizable="false" id="Dlgparam"  
+                                      showEffect="fade" hideEffect="explode" modal="true"> 
+                                <h:panelGrid id="display" columns="3" cellpadding="4" style="margin:0 auto;"> 
+                                    <h:outputLabel value="Código:" style="font-weight:bold"/>  
+                                    <p:inputText id="codigo_mod" value="#{beanParametros.parametro_nuevo.codigoParam}" disabled="true" style="font-weight:bold;"/>  
+                                    <p:message for="codigo_mod" display="icon"/>
+                                    
+                                    <h:outputLabel value="Nombre:" style="font-weight:bold" for="nombre_modificar"/>  
+                                    <p:inputText id="nombre_modificar" value="#{beanParametros.parametro_nuevo.nombre}" maxlength="15" required="true" disabled="true"/>  
+                                    <p:message for="nombre_modificar" display="icon"/>
+                                    
+                                    <h:outputLabel value="Tipo:" style="font-weight:bold"/>
+                                    <p:selectOneMenu id ="TipoParam" value="#{beanParametros.parametro_nuevo.tipo}" requiredMessage="Seleccione un tipo de parámetro" style="width: 167px;"
+                                                     required="true" >  
+                                        <f:selectItem itemLabel="Seleccione Tipo De Parametro" itemValue="" /> 
+                                        <f:selectItem itemLabel="Fija" itemValue="Fija" />                                     
+                                    </p:selectOneMenu>  
+                                    <p:message for="TipoParam" display="icon"/>
+                                    
+                                    <h:outputLabel value="Valor:" style="font-weight:bold" for="valor_modiciar" />  
+                                    <p:inputText id="valor_modiciar" value="#{beanParametros.parametro_nuevo.valor}" converterMessage="El campo valor solo permite valores numéricos"
+                                                 requiredMessage="Ingrese el valor del parámetro" maxlength="7" label="Valor del parámetro"
+                                                 required="true"/>  
+                                    <p:message for="valor_modiciar" display="icon"/>
+                                    
+                                    <h:outputLabel value="Longitud:" for="longitud_Modificar" style="font-weight:bold"/>  
+                                    <p:inputText id="longitud_Modificar" maxlength="3" converterMessage="El campo longitud solo permite valores numéricos"
+                                                label="Longitud del parámetro" value="#{beanParametros.parametro_nuevo.longitud}"/>  
+                                    <p:message for="longitud_Modificar" display="icon"/>
+                                    
+                                    <h:outputLabel value="Descripción:" style="font-weight:bold" for="des_modificar" />  
+                                    <p:inputTextarea id="des_modificar" value="#{beanParametros.parametro_nuevo.descripcion}" requiredMessage="Digite una descripción"
+                                                     required="true" label="Descripción corta del parámetro"
+                                                     rows="6" cols="33" maxlength="50" style="font-weight:bold;" />
+                                    <p:message for="des_modificar" display="icon"/>
+                                    <f:facet name="footer">
+                                        <p:separator style="width: 97%; margin-right: 10px;" />
+                                        <div style="padding-left: 143px;">
+                                            <p:commandButton id="BtnActualizarParametro" update=":listarParametros, :msgs" icon="ui-icon-pencil" title="Actualizar" value="Actualizar" 
+                                                             oncomplete="if(#{beanParametros.btn}){param.hide()}else{param.show()}" actionListener="#{beanParametros.btnModificarParametro}"/>  
+                                            <p:commandButton id="BtnCancelarParametro"  oncomplete="param.hide()" icon="ui-icon-cancel" title="Cancelar" value="Cancelar"/>      
+                                        </div>
+                                    </f:facet>                        
+                                </h:panelGrid>  
+                            </p:dialog>  
+                        </h:form>  
+                        <h:form id="EliminarParametro">
+                            <p:confirmDialog id ="confirmarelimparam" header="Eliminar Parametro" severity="alert" showEffect="fade" hideEffect="explode" message="¿Desea eliminar el parametro?" widgetVar="DialogEliminarParam">                              
+                                <div style="padding-left: 20px;">
+                                    <p:commandButton id="confirm" update=":listarParametros,:msgs"  styleClass="ui-confirmdialog-yes"  title="Aceptar"
+                                                     icon="ui-icon-check"  actionListener="#{beanParametros.btnEliminarParametro}" value="Aceptar"/>  
+                                    <p:commandButton  id="decline" value="Cancelar" type="button" styleClass="ui-confirmdialog-no" title="Cancelar"
+                                                      icon="ui-icon-close" onclick="DialogEliminarParam.hide();"/>       
+                                </div>
+                            </p:confirmDialog> 
+                        </h:form>  
+                    </div>
+                </p:fieldset>
+            </ui:define>         
+        </ui:composition>
+    </body>
+</html>
